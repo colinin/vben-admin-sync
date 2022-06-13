@@ -38,14 +38,14 @@ const transform: AxiosTransform = {
     }
 
     const { data } = res;
-    
+
     // 对包装结果处理
     if (res.headers['_abpwrapresult'] === 'true') {
       if (!data) {
         // return '[HTTP] Request has no return value';
         throw new Error(t('sys.api.apiRequestFailed'));
       }
-        
+
       const { code, result, message, details } = data;
       const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.CODE;
       if (hasSuccess) {
@@ -55,12 +55,12 @@ const transform: AxiosTransform = {
       const title = details ? message : t('sys.api.errorTip');
       const content = details ? details : message;
       if (options.errorMessageMode === 'modal') {
-          createErrorModal({ title: title, content: content });
-        } else if (options.errorMessageMode === 'message') {
-          createMessage.error(content);
-        }
-    
-        throw new Error(content || t('sys.api.apiRequestFailed'));
+        createErrorModal({ title: title, content: content });
+      } else if (options.errorMessageMode === 'message') {
+        createMessage.error(content);
+      }
+
+      throw new Error(content || t('sys.api.apiRequestFailed'));
     }
 
     return data;
@@ -95,7 +95,12 @@ const transform: AxiosTransform = {
         if (Reflect.has(config, 'data') && config.data && Object.keys(config.data).length > 0) {
           config.data = data;
           config.params = params;
-        } else if (Reflect.has(config, 'headers') && config.headers && config.headers['Content-Type'] !== ContentTypeEnum.FORM_DATA) { // 防止form-data类型数据被清除
+        } else if (
+          Reflect.has(config, 'headers') &&
+          config.headers &&
+          config.headers['Content-Type'] !== ContentTypeEnum.FORM_DATA
+        ) {
+          // 防止form-data类型数据被清除
           // 非GET请求如果没有提供data，则将params视为data
           config.data = params;
           config.params = undefined;
@@ -202,6 +207,11 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           ignoreCancelToken: true,
           // 是否携带token
           withToken: true,
+          retryRequest: {
+            isOpenRetry: true,
+            count: 5,
+            waitTime: 100,
+          },
         },
       },
       opt || {},

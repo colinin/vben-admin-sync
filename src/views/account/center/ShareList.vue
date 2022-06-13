@@ -5,10 +5,10 @@
         :stop-button-propagation="true"
         :actions="[
           {
-              label: L('CopyLink'),
-              icon: 'ant-design:copy-outlined',
-              onClick: handleCopyLink.bind(null, record),
-            },
+            label: L('CopyLink'),
+            icon: 'ant-design:copy-outlined',
+            onClick: handleCopyLink.bind(null, record),
+          },
           {
             color: 'error',
             label: L('Delete'),
@@ -82,10 +82,10 @@
   }
 
   function handleCopyLink(record) {
-    let url = window.location.origin
-    url += '/api/files/share/' + record.url
+    let url = window.location.origin;
+    url += '/api/files/share/' + record.url;
     if (copyTextToClipboard(url)) {
-      createMessage.success(L('Successful'))
+      createMessage.success(L('Successful'));
     }
   }
 

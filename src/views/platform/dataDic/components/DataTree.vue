@@ -109,7 +109,7 @@
           },
         ];
       }
-      
+
       function onLoadAllDataDic() {
         getAll().then((res) => {
           treeData.value = listToTree(res.items, {
@@ -134,7 +134,7 @@
           true,
         );
       }
-      
+
       function handleSaveChanges(val) {
         const api: Promise<Data> = val.id
           ? update(val.id, {

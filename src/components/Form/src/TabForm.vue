@@ -48,6 +48,7 @@
 </template>
 
 <script lang="ts">
+  import dayjs from 'dayjs';
   import type { FormActionType, FormProps, FormSchema, TabFormSchema } from './types/form';
   import type { AdvanceState } from './types/hooks';
   import type { CSSProperties, Ref } from 'vue';
@@ -140,7 +141,7 @@
             if (!Array.isArray(defaultValue)) {
               schema.defaultValue = dateUtil(defaultValue);
             } else {
-              const def: moment.Moment[] = [];
+              const def: dayjs.Dayjs[] = [];
               defaultValue.forEach((item) => {
                 def.push(dateUtil(item));
               });

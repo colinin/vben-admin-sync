@@ -8,6 +8,7 @@
     v-show="getShow"
     colon
     labelAlign="left"
+    layout="vertical"
     @keypress.enter="handleLogin"
   >
     <FormItem>

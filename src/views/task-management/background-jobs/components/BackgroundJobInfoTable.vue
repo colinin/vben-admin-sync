@@ -75,7 +75,9 @@
             {
               auth: 'TaskManagement.BackgroundJobs.Trigger',
               label: L('BackgroundJobs:Trigger'),
-              ifShow: [JobStatus.Running, JobStatus.Completed, JobStatus.FailedRetry].includes(record.status),
+              ifShow: [JobStatus.Running, JobStatus.Completed, JobStatus.FailedRetry].includes(
+                record.status,
+              ),
               onClick: handleTrigger.bind(null, record),
             },
             {
@@ -100,11 +102,25 @@
   import { useModal } from '/@/components/Modal';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { formatPagedRequest } from '/@/utils/http/abp/helper';
-  import { getList, pause, resume, trigger, deleteById, bulkStop, bulkStart } from '/@/api/task-management/backgroundJobInfo';
+  import {
+    getList,
+    pause,
+    resume,
+    trigger,
+    deleteById,
+    bulkStop,
+    bulkStart,
+  } from '/@/api/task-management/backgroundJobInfo';
   import { JobStatus } from '/@/api/task-management/model/backgroundJobInfoModel';
   import { getDataColumns } from '../datas/TableData';
   import { getSearchFormSchemas } from '../datas/ModalData';
-  import { JobStatusMap, JobStatusColor, JobTypeMap, JobPriorityMap, JobPriorityColor } from '../datas/typing';
+  import {
+    JobStatusMap,
+    JobStatusColor,
+    JobTypeMap,
+    JobPriorityMap,
+    JobPriorityColor,
+  } from '../datas/typing';
   import BackgroundJobInfoModal from './BackgroundJobInfoModal.vue';
 
   const go = useGo();

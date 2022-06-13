@@ -2,7 +2,9 @@
   <div class="content">
     <BasicTable @register="registerTable">
       <template #code="{ record }">
-        <Tag :color="getHttpStatusColor(record.responseStatusCode)">{{ httpStatusCodeMap[record.responseStatusCode] }}</Tag>
+        <Tag :color="getHttpStatusColor(record.responseStatusCode)">{{
+          httpStatusCodeMap[record.responseStatusCode]
+        }}</Tag>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -97,10 +99,12 @@
 
   function handleResend(record) {
     setLoading(true);
-    resend(record.id).then(() => {
-      createMessage.success(L('Successful'));
-    }).finally(() => {
-      setLoading(false);
-    });
+    resend(record.id)
+      .then(() => {
+        createMessage.success(L('Successful'));
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 </script>

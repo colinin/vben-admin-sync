@@ -45,9 +45,7 @@
         validate().then((input) => {
           loading.value = true;
 
-          const api = input.id
-            ? update(input.id, input)
-            : create(input);
+          const api = input.id ? update(input.id, input) : create(input);
 
           api
             .then(() => {

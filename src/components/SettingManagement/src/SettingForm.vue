@@ -45,9 +45,9 @@
                     />
                     <DatePicker
                       v-if="detail.valueType === 3"
-                      :value="detail.value ? moment(detail.value, 'YYYY-MM-DD') : ''"
+                      :value="detail.value ? dayjs(detail.value, 'YYYY-MM-DD') : ''"
                       :placeholder="detail.description"
-                      style="width: 100%;"
+                      style="width: 100%"
                       @change="handleDateChange($event, detail)"
                     />
                     <Select
@@ -98,11 +98,21 @@
 </template>
 
 <script lang="ts">
-  import moment from 'moment';
+  import dayjs from 'dayjs';
   import { computed, defineComponent, ref, toRaw } from 'vue';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useLocalization } from '/@/hooks/abp/useLocalization';
-  import { Checkbox, Tabs, Collapse, Form, Input, Select, Row, Col, DatePicker } from 'ant-design-vue';
+  import {
+    Checkbox,
+    Tabs,
+    Collapse,
+    Form,
+    Input,
+    Select,
+    Row,
+    Col,
+    DatePicker,
+  } from 'ant-design-vue';
   import { Input as BInput } from '/@/components/Input';
   import { formatToDate } from '/@/utils/dateUtil';
   import { SettingGroup, SettingsUpdate } from '/@/api/settings/model/settingModel';
@@ -174,7 +184,7 @@
       }
 
       function handleDateChange(e, setting) {
-        setting.value = moment.isMoment(e) ? formatToDate(e) : '';
+        setting.value = dayjs.isDayjs(e) ? formatToDate(e) : '';
         handleValueChange(setting);
       }
 
@@ -205,7 +215,7 @@
 
       return {
         L,
-        moment,
+        dayjs,
         saving,
         activeTabKey,
         updateSetting,

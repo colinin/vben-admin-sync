@@ -84,11 +84,15 @@
           upload(params.file, 'avatar', params.filename)
             .then((res) => {
               const path = encodeURIComponent(res.data.path.substring(0, res.data.path.length - 1));
-              changeAvatar({ avatarUrl: `${path}/${res.data.name}` }).then(() => {
-                _fetchProfile().then(() => {
-                  resolve({} as unknown as void);
-                }).catch((err) => reject(err));
-              }).catch((err) => reject(err));
+              changeAvatar({ avatarUrl: `${path}/${res.data.name}` })
+                .then(() => {
+                  _fetchProfile()
+                    .then(() => {
+                      resolve({} as unknown as void);
+                    })
+                    .catch((err) => reject(err));
+                })
+                .catch((err) => reject(err));
             })
             .catch((err) => reject(err));
         });

@@ -22,11 +22,9 @@
       </FormItem>
       <FormItem name="tenantId" :label="L('DisplayName:TenantId')">
         <Select v-model:value="modelRef.tenantId">
-          <SelectOption
-            v-for="tenant in tenantsRef"
-            :key="tenant.id"
-            :value="tenant.id"
-          >{{ tenant.name }}</SelectOption>
+          <SelectOption v-for="tenant in tenantsRef" :key="tenant.id" :value="tenant.id">{{
+            tenant.name
+          }}</SelectOption>
         </Select>
       </FormItem>
       <FormItem name="webhookUri" required :label="L('DisplayName:WebhookUri')">
@@ -37,7 +35,11 @@
       </FormItem>
       <FormItem name="webhooks" :label="L('DisplayName:Webhooks')">
         <Select v-model:value="modelRef.webhooks" mode="multiple" :filterOption="optionFilter">
-          <SelectGroup v-for="group in webhooksGroupRef" :key="group.name" :label="group.displayName">
+          <SelectGroup
+            v-for="group in webhooksGroupRef"
+            :key="group.name"
+            :label="group.displayName"
+          >
             <SelectOption
               v-for="option in group.webhooks"
               :key="option.name"
@@ -55,7 +57,7 @@
         </Select>
       </FormItem>
       <FormItem name="headers" :label="L('DisplayName:Headers')">
-        <CodeEditor style="height: 300px;" :mode="MODE.JSON" v-model:value="modelRef.headers" />
+        <CodeEditor style="height: 300px" :mode="MODE.JSON" v-model:value="modelRef.headers" />
       </FormItem>
     </Form>
   </BasicModal>
@@ -66,21 +68,17 @@
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { useValidation } from '/@/hooks/abp/useValidation';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import {
-    Checkbox,
-    Form,
-    Select,
-    Tooltip,
-    Input,
-    InputPassword
-  } from 'ant-design-vue';
+  import { Checkbox, Form, Select, Tooltip, Input, InputPassword } from 'ant-design-vue';
   import { isString } from '/@/utils/is';
   import { CodeEditor, MODE } from '/@/components/CodeEditor';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { Tenant } from '/@/api/saas/model/tenantModel';
   import { getList as getTenants } from '/@/api/saas/tenant';
   import { getById, create, update, getAllAvailableWebhooks } from '/@/api/webhooks/subscriptions';
-  import { WebhookSubscription, WebhookAvailableGroup } from '/@/api/webhooks/model/subscriptionsModel';
+  import {
+    WebhookSubscription,
+    WebhookAvailableGroup,
+  } from '/@/api/webhooks/model/subscriptionsModel';
 
   const FormItem = Form.Item;
   const SelectGroup = Select.OptGroup;
@@ -97,7 +95,7 @@
   const [registerModal, { closeModal, changeOkLoading }] = useModalInner((model) => {
     fetchModel(model.id);
     nextTick(() => {
-      const formEl  = unref(formElRef);
+      const formEl = unref(formElRef);
       formEl?.clearValidate();
     });
   });
@@ -126,7 +124,7 @@
         prefix: 'DisplayName',
         length: 255,
         type: 'string',
-      })
+      }),
     ],
     secret: ruleCreator.fieldMustBeStringWithMaximumLength({
       name: 'Secret',
@@ -155,7 +153,7 @@
       sorting: undefined,
     }).then((res) => {
       tenantsRef.value = res.items;
-    })
+    });
   }
 
   function fetchModel(id: string) {
@@ -174,19 +172,21 @@
       changeOkLoading(true);
       const model = unref(modelRef);
       if (isString(model.headers)) {
-        model.headers = JSON.parse(model.headers)
+        model.headers = JSON.parse(model.headers);
       }
       const api = isEditModal.value
         ? update(model.id, Object.assign(model))
         : create(Object.assign(model));
-      api.then(() => {
-        createMessage.success(L('Successful'));
-        formEl?.resetFields();
-        closeModal();
-        emit('change');
-      }).finally(() => {
-        changeOkLoading(false);
-      });
+      api
+        .then(() => {
+          createMessage.success(L('Successful'));
+          formEl?.resetFields();
+          closeModal();
+          emit('change');
+        })
+        .finally(() => {
+          changeOkLoading(false);
+        });
     });
   }
 
@@ -200,7 +200,7 @@
     return true;
   }
 
-  function getDefaultModel() : WebhookSubscription {
+  function getDefaultModel(): WebhookSubscription {
     return {
       id: '',
       webhooks: [],

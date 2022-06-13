@@ -21,6 +21,7 @@ export function getDataColumns(): BasicColumn[] {
       slots: {
         customRender: 'request',
       },
+      resizable: true,
     },
     {
       title: L('UserName'),
@@ -28,6 +29,7 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 120,
       sorter: true,
+      resizable: true,
     },
     {
       title: L('ClientIpAddress'),

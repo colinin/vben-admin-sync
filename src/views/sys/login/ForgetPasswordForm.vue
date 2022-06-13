@@ -8,6 +8,7 @@
       ref="formRef"
       colon
       labelAlign="left"
+      layout="vertical"
     >
       <FormItem>
         <MultiTenancyBox />

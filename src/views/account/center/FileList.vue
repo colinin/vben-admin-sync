@@ -102,11 +102,14 @@
   });
   const bucket = computed(() => {
     switch (props.selectGroup) {
-      case 'private': return 'users';
-      case 'public': return 'public';
-      default: return '';
+      case 'private':
+        return 'users';
+      case 'public':
+        return 'public';
+      default:
+        return '';
     }
-  })
+  });
 
   const [registershareForm, { validate, setFieldsValue, resetFields }] = useForm({
     labelAlign: 'left',

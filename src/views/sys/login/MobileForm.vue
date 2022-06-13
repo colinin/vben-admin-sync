@@ -8,6 +8,7 @@
       ref="formRef"
       colon
       labelAlign="left"
+      layout="vertical"
     >
       <FormItem>
         <MultiTenancyBox />
@@ -41,7 +42,6 @@
     </Form>
   </template>
 </template>
-
 <script lang="ts" setup>
   import { reactive, ref, computed, unref } from 'vue';
   import { Form, Input, Button } from 'ant-design-vue';

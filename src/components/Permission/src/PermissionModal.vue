@@ -113,7 +113,7 @@
           return `${L('Permissions')} - ${model.value.identity}`;
         }
         return title.value;
-      })
+      });
 
       function handleVisibleChange(visible: boolean) {
         if (!visible) {

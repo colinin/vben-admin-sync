@@ -8,6 +8,7 @@
       :rules="getFormRules"
       colon
       labelAlign="left"
+      layout="vertical"
     >
       <FormItem>
         <MultiTenancyBox />

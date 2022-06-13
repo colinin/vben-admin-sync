@@ -100,7 +100,12 @@
   import { usePermission } from '/@/hooks/web/usePermission';
   import { useModal } from '/@/components/Modal';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
-  import { getObjects, deleteObject, bulkDeleteObject, generateOssUrl } from '/@/api/oss-management/oss';
+  import {
+    getObjects,
+    deleteObject,
+    bulkDeleteObject,
+    generateOssUrl,
+  } from '/@/api/oss-management/oss';
   import { getDataColumns } from '../datas/TableData';
   import { useObjects } from '../hooks/useObjects';
   import OssUploadModal from './OssUploadModal.vue';
@@ -179,7 +184,7 @@
       });
       const selectCount = computed(() => {
         return getSelectRowKeys().length;
-      })
+      });
 
       function handleSelectFolder(folders, e) {
         path.value = e.node.dataRef.path + folders[0];
