@@ -110,6 +110,7 @@ specifiers:
   vite-plugin-vue-setup-extend: ^0.4.0
   vite-plugin-windicss: ^1.8.4
   vue: ^3.2.33
+  vue-cookies: ^1.8.1
   vue-eslint-parser: ^8.3.0
   vue-i18n: ^9.1.9
   vue-json-pretty: ^2.0.6
@@ -154,6 +155,7 @@ dependencies:
   tinymce: 5.10.3
   vditor: 3.8.13
   vue: 3.2.33
+  vue-cookies: 1.8.1
   vue-i18n: 9.1.9_vue@3.2.33
   vue-json-pretty: 2.0.6_vue@3.2.33
   vue-router: 4.0.14_vue@3.2.33
@@ -7440,7 +7442,7 @@ packages:
     dev: true
 
   /object-assign/4.1.1:
-    resolution: {integrity: sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=}
+    resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -10089,6 +10091,10 @@ packages:
   /vscode-uri/3.0.3:
     resolution: {integrity: sha512-EcswR2S8bpR7fD0YPeS7r2xXExrScVMxg4MedACaWHEtx9ftCF/qHG1xGkolzTPcEmjTavCQgbVzHUIdTMzFGA==}
     dev: true
+
+  /vue-cookies/1.8.1:
+    resolution: {integrity: sha512-PDq1EaiRRyau5PBQVscXboHW+iWtcG4wRY2UKIz1j0nrjb3KESRU1PUyNUDdOajAwy4RH1IfiNR0suhWRXQdrA==}
+    dev: false
 
   /vue-demi/0.12.5_vue@3.2.33:
     resolution: {integrity: sha512-BREuTgTYlUr0zw0EZn3hnhC3I6gPWv+Kwh4MCih6QcAeaTlaIX0DwOVN0wHej7hSvDPecz4jygy/idsgKfW58Q==}

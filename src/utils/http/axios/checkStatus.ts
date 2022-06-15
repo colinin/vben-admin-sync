@@ -80,7 +80,7 @@ export function checkStatus(
 }
 
 export function checkResponse(response: any): void {
-  if (!response.data) {
+  if (!response?.data) {
     // 都没捕获到则提示默认错误信息
     const { t } = useI18n();
     checkStatus(response.status, t('sys.api.apiRequestFailed'));

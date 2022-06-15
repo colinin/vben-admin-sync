@@ -15,8 +15,12 @@
         </FormItem>
         <FormItem :label="L('Menu:SetStartup')">
           <TreeSelect
-            :field-names="replaceFields"
             :tree-data="menuTreeRef"
+            :field-names="{
+              label: 'displayName',
+              children: 'children',
+              value: 'id',
+            }"
             :allow-clear="true"
             v-model:value="startupMenuRef"
           />
@@ -25,6 +29,7 @@
           <BasicTree
             :checkable="true"
             :check-strictly="true"
+            :clickRowToExpand="true"
             :tree-data="menuTreeRef"
             :field-names="replaceFields"
             :checked-keys="defaultCheckedRef"

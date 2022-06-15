@@ -62,6 +62,7 @@ export default {
     settingColumnShow: 'Column display',
     settingIndexColumnShow: 'Index Column',
     settingSelectColumnShow: 'Selection Column',
+    settingDragColumnShow: 'Drag Column',
     settingFixedLeft: 'Fixed Left',
     settingFixedRight: 'Fixed Right',
     settingFullScreen: 'Full Screen',

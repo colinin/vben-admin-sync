@@ -16,7 +16,6 @@ import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { joinTimestamp, formatRequestDate } from './helper';
 import { useLocaleStoreWithOut } from '/@/store/modules/locale';
-import { Persistent } from '../../cache/persistent';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -136,10 +135,6 @@ const transform: AxiosTransform = {
     config.headers = config.headers ?? {};
     const localeStore = useLocaleStoreWithOut();
     config.headers['Accept-Language'] = localeStore.getLocale;
-    const tenant = Persistent.getTenant();
-    if (tenant && tenant.id) {
-      config.headers[globSetting.multiTenantKey] = tenant.id;
-    }
     return config;
   },
 
@@ -153,7 +148,7 @@ const transform: AxiosTransform = {
   /**
    * @description: 响应错误处理
    */
-  responseInterceptorsCatch: (error: any) => {
+  responseInterceptorsCatch: (_, error: any) => {
     // const { t } = useI18n();
     const errorLogStore = useErrorLogStoreWithOut();
     errorLogStore.addAjaxErrorInfo(error);

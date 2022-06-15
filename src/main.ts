@@ -5,6 +5,7 @@ import 'virtual:windi-utilities.css';
 // Register icon sprite
 import 'virtual:svg-icons-register';
 import App from './App.vue';
+import VueCookies from 'vue-cookies'
 import { createApp } from 'vue';
 import { initAppConfigStore, initAbpConfigStore } from '/@/logics/initAppConfig';
 import { setupErrorHandle } from '/@/logics/error-handle';
@@ -48,6 +49,8 @@ async function bootstrap() {
   // Mount when the route is ready
   // https://next.router.vuejs.org/api/#isready
   // await router.isReady();
+
+  app.use(VueCookies);
 
   app.mount('#app');
 }

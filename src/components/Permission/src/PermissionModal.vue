@@ -1,5 +1,6 @@
 <template>
   <BasicModal
+    ref="modalRef"
     v-bind="$attrs"
     @register="registerModal"
     :title="getIdentity"
@@ -8,8 +9,8 @@
     @ok="handleSubmit"
     @visible-change="handleVisibleChange"
   >
-    <Row>
-      <Col :span="24">
+    <Row ref="rowRef">
+      <Col :span="24" ref="preColRef">
         <Checkbox
           :checked="permissionTreeCheckState.checked"
           :indeterminate="permissionTreeCheckState.indeterminate"
@@ -36,14 +37,15 @@
               <BasicTree
                 :checkable="true"
                 :checkStrictly="true"
+                :clickRowToExpand="true"
                 :disabled="permissionTreeDisabled"
                 :treeData="permission.children"
-                :replaceFields="{
+                :fieldNames="{
                   key: 'name',
                   title: 'displayName',
                   children: 'children',
                 }"
-                :checkedKeys="permissionGrantKeys(permission)"
+                :value="permissionGrantKeys(permission)"
                 @check="
                   (selectKeys, event) => handlePermissionGranted(permission, selectKeys, event)
                 "

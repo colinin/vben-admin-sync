@@ -1,6 +1,6 @@
 <template>
   <Form
-    v-bind="{ ...$attrs, ...$props, ...getProps }"
+    v-bind="getBindValue"
     :class="getFormClass"
     ref="formElRef"
     :model="formModel"
@@ -34,7 +34,7 @@
         </TabPane>
       </Tabs>
 
-      <FormAction v-bind="{ ...getProps, ...advanceState }" @toggle-advanced="handleToggleAdvanced">
+      <FormAction v-bind="getFormActionBindProps" @toggle-advanced="handleToggleAdvanced">
         <template
           #[item]="data"
           v-for="item in ['resetBefore', 'submitBefore', 'advanceBefore', 'advanceAfter']"
@@ -49,9 +49,9 @@
 
 <script lang="ts">
   import dayjs from 'dayjs';
-  import type { FormActionType, FormProps, FormSchema, TabFormSchema } from './types/form';
+  import type { FormActionType, TabFormProps, FormSchema, TabFormSchema } from './types/form';
   import type { AdvanceState } from './types/hooks';
-  import type { CSSProperties, Ref } from 'vue';
+  import type { Ref } from 'vue';
 
   import { defineComponent, reactive, ref, computed, unref, onMounted, watch, nextTick } from 'vue';
   import { Form, Row, Tabs } from 'ant-design-vue';
@@ -74,8 +74,7 @@
 
   import { tabProps } from './props';
   import { useDesign } from '/@/hooks/web/useDesign';
-
-  import type { RowProps } from 'ant-design-vue/lib/grid/Row';
+  import { mergeWith } from 'lodash-es';
 
   export default defineComponent({
     name: 'TabForm',
@@ -89,7 +88,7 @@
     },
     props: tabProps,
     emits: ['advanced-change', 'reset', 'submit', 'register'],
-    setup(props, { emit }) {
+    setup(props, { emit, attrs }) {
       const formModel = reactive<Recordable>({});
       const modalFn = useModalContext();
 
@@ -103,15 +102,19 @@
       const defaultValueRef = ref<Recordable>({});
       const isInitedDefaultRef = ref(false);
       const activedTabKey = ref('');
-      const propsRef = ref<Partial<FormProps>>({});
+      const propsRef = ref<Partial<TabFormProps>>({});
       const schemaRef = ref<Nullable<TabFormSchema[]>>(null);
       const formElRef = ref<Nullable<FormActionType>>(null);
 
       const { prefixCls } = useDesign('basic-form');
 
+      const getBindValue = computed(
+        () => ({ ...attrs, ...props, ...unref(getProps) } as Recordable),
+      );
+
       // Get the basic configuration of the form
-      const getProps = computed((): FormProps => {
-        return { ...props, ...unref(propsRef) } as FormProps;
+      const getProps = computed((): TabFormProps => {
+        return mergeWith(props, unref(propsRef)) as TabFormProps;
       });
 
       const getFormClass = computed(() => {
@@ -124,7 +127,7 @@
       });
 
       // Get uniform row style and Row configuration for the entire form
-      const getRow = computed((): CSSProperties | RowProps => {
+      const getRow = computed((): Recordable => {
         const { baseRowStyle = {}, rowProps } = unref(getProps);
         return {
           style: baseRowStyle,
@@ -149,7 +152,11 @@
             }
           }
         }
-        return schemas as TabFormSchema[];
+        if (unref(getProps).showAdvancedButton) {
+          return schemas.filter((schema) => schema.component !== 'Divider') as TabFormSchema[];
+        } else {
+          return schemas as TabFormSchema[];
+        }
       });
 
       const getTabSchema = computed((): { key: string; schemas: FormSchema[] }[] => {
@@ -254,7 +261,7 @@
         },
       );
 
-      async function setProps(formProps: Partial<FormProps>): Promise<void> {
+      async function setProps(formProps: Partial<TabFormProps>): Promise<void> {
         propsRef.value = deepMerge(unref(propsRef) || {}, formProps);
       }
 
@@ -295,6 +302,7 @@
       });
 
       return {
+        getBindValue,
         handleToggleAdvanced,
         handleEnterPress,
         activedTabKey,
@@ -306,10 +314,12 @@
         formElRef,
         getSchema,
         getTabSchema,
-        formActionType,
+        formActionType: formActionType as any,
         setFormModel,
-        prefixCls,
         getFormClass,
+        getFormActionBindProps: computed(
+          (): Recordable => ({ ...getProps.value, ...advanceState }),
+        ),
         ...formActionType,
       };
     },

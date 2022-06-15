@@ -23,14 +23,14 @@
       />
     </template>
     <template #toolbar>
-      <a-button type="primary" @click="handleAppendItem">{{ L('Data:AppendItem') }}</a-button>
+      <a-button v-if="isEnableNew" type="primary" @click="handleAppendItem">{{ L('Data:AppendItem') }}</a-button>
     </template>
   </BasicTable>
-  <DataItemModal @register="registerModal" :data-id="getDataId" @change="handleItemChange" />
+  <DataItemModal @register="registerModal" @change="fetchItems" />
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, createVNode } from 'vue';
+  import { computed, defineComponent, ref, createVNode, watch } from 'vue';
 
   import { getDataColumns } from './TableData';
   import DataItemModal from './DataItemModal.vue';
@@ -58,7 +58,7 @@
     },
     props,
     emits: ['reload'],
-    setup() {
+    setup(props, { emit }) {
       const { L } = useLocalization('AppPlatform', 'AbpUi');
       const dataItems = ref<DataItem[]>([]);
       const [registerTable] = useTable({
@@ -78,58 +78,71 @@
         },
       });
       const [registerModal, { openModal }] = useModal();
-      const getDataId = ref('');
 
-      return {
-        L,
-        registerTable,
-        dataItems,
-        registerModal,
-        openModal,
-        getDataId,
-      };
-    },
-    watch: {
-      dataId(newVal) {
-        this.getDataId = newVal;
-        if (newVal) {
-          this.handleGetItems(newVal);
+      const isEnableNew = computed(() => {
+        if (props.dataId && props.dataId !== '') {
+          return true;
         }
-      },
-    },
-    methods: {
-      handleGetItems(dataId: string) {
+        return false;
+      });
+
+      watch(
+        () => props.dataId,
+        (dataId) => {
+          dataItems.value = [];
+          if (dataId) {
+            fetchItems(dataId);
+          }
+        },
+        {
+          immediate: true,
+        },
+      )
+
+      function fetchItems(dataId: string) {
         get(dataId).then((res) => {
-          this.dataItems = res.items;
+          dataItems.value = res.items;
         });
-      },
-      handleAppendItem() {
-        this.openModal(true, {}, true);
-      },
-      handleEdit(record: Recordable) {
-        // 克隆对象过去,解决清除表单值后再次编辑为空值
-        this.openModal(true, Object.assign({}, record), true);
-      },
-      handleDelete(record: Recordable) {
+      }
+
+      function handleAppendItem() {
+        openModal(true, { dataId: props.dataId });
+      }
+
+      function handleEdit(record) {
+        openModal(true, { dataId: props.dataId, ...record });
+      }
+
+      function handleDelete(record: Recordable) {
         Modal.confirm({
-          title: this.L('AreYouSure'),
+          title: L('AreYouSure'),
           icon: createVNode(ExclamationCircleOutlined),
           content: createVNode(
             'div',
             { style: 'color:red;' },
-            this.L('ItemWillBeDeletedMessageWithFormat', [record.displayName] as Recordable),
+            L('ItemWillBeDeletedMessageWithFormat', [record.displayName] as Recordable),
           ),
           onOk: () => {
-            removeItem(this.dataId!, record.name).then(() => {
-              this.$emit('reload');
-              this.handleItemChange(this.dataId!);
+            removeItem(props.dataId!, record.name).then(() => {
+              emit('reload');
+              fetchItems(props.dataId!);
             });
           },
         });
-      },
-      handleItemChange(dataId: string) {
-        this.handleGetItems(dataId);
-      },
+      }
+
+      return {
+        L,
+        isEnableNew,
+        registerTable,
+        dataItems,
+        registerModal,
+        openModal,
+        fetchItems,
+        handleAppendItem,
+        handleEdit,
+        handleDelete,
+      };
     },
   });
 </script>

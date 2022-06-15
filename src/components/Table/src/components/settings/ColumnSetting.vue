@@ -32,6 +32,10 @@
             {{ t('component.table.settingSelectColumnShow') }}
           </Checkbox>
 
+          <Checkbox v-model:checked="checkDrag" @change="handleDragChange">
+            {{ t('component.table.settingDragColumnShow') }}
+          </Checkbox>
+
           <a-button size="small" type="link" @click="reset">
             {{ t('common.resetText') }}
           </a-button>
@@ -174,6 +178,7 @@
 
       const checkIndex = ref(false);
       const checkSelect = ref(false);
+      const checkDrag = ref(false);
 
       const { prefixCls } = useDesign('basic-column-setting');
 
@@ -336,6 +341,14 @@
         });
       }
 
+      function handleDragChange(e: ChangeEvent) {
+        const columns = getColumns() as BasicColumn[];
+        columns.forEach((col) => {
+          col.resizable = e.target.checked;
+        });
+        setColumns(columns);
+      }
+
       function handleColumnFixed(item: BasicColumn, fixed?: 'left' | 'right') {
         if (!state.checkedList.includes(item.dataIndex as string)) return;
 
@@ -387,8 +400,10 @@
         handleVisibleChange,
         checkIndex,
         checkSelect,
+        checkDrag,
         handleIndexCheckChange,
         handleSelectCheckChange,
+        handleDragChange,
         defaultRowSelection,
         handleColumnFixed,
         getPopupContainer,

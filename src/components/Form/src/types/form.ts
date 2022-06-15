@@ -124,6 +124,11 @@ export interface FormProps {
   transformDateFunc?: (date: any) => string;
   colon?: boolean;
 }
+
+export interface TabFormProps extends FormProps {
+  tab: string;
+}
+
 export interface FormSchema {
   // Field name
   field: string;
