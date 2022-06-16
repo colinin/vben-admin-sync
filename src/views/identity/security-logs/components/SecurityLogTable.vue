@@ -47,6 +47,7 @@
         immediate: true,
         canColDrag: true,
         formConfig: getSearchFormSchemas(),
+        scroll: { x: 'max-content', y: '100%' },
         actionColumn: {
           width: 120,
           title: L('Actions'),

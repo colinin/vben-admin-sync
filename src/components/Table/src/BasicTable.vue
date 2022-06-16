@@ -68,7 +68,7 @@
 
   import { omit } from 'lodash-es';
   import { basicProps } from './props';
-  import { isFunction } from '/@/utils/is';
+  import { isFunction, isNumber } from '/@/utils/is';
   import { warn } from '/@/utils/log';
 
   export default defineComponent({
@@ -325,7 +325,9 @@
       emit('register', tableAction, formActions);
 
       function handleResizeColumn(w, col) {
-        col.width = w;
+        if (isNumber(col.width)) {
+          col.width = w;
+        }
       }
 
       return {

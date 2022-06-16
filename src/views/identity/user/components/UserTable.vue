@@ -63,7 +63,7 @@
             {
               auth: 'AbpIdentity.Users.ManageClaims',
               label: L('Claim'),
-              onClick: openClaimModal.bind(null, true, record, true),
+              onClick: handleShowClaims.bind(null, record),
             },
             {
               auth: 'AbpIdentity.Users.Update',
@@ -82,7 +82,13 @@
     <UserModal @register="registerModal" @change="reloadTable" />
     <PermissionModal @register="registerPermissionModal" />
     <PasswordModal @register="registerPasswordModal" />
-    <ClaimModal @register="registerClaimModal" />
+    <ClaimModal
+      @register="registerClaimModal"
+      :fetch-api="getUserClaims"
+      :create-api="createClaim"
+      :update-api="updateClaim"
+      :delete-api="deleteClaim"
+    />
     <LockModal @register="registerLockModal" @change="reloadTable" />
     <MenuModal
       @register="registerMenuModal"
@@ -104,14 +110,15 @@
   import { BasicTable, TableAction } from '/@/components/Table';
   import UserModal from './UserModal.vue';
   import PasswordModal from './PasswordModal.vue';
-  import ClaimModal from './ClaimModal.vue';
   import LockModal from './LockModal.vue';
   import MenuModal from '../../components/MenuModal.vue';
+  import ClaimModal from '../../components/ClaimModal.vue';
   import { useUserTable } from '../hooks/useUserTable';
   import { usePassword } from '../hooks/usePassword';
   import { useLock } from '../hooks/useLock';
   import { usePermission as usePermissionModal } from '../hooks/usePermission';
   import { getListByUser, setUserMenu, setUserStartupMenu } from '/@/api/platform/menu';
+  import { getClaimList as getUserClaims, createClaim, updateClaim, deleteClaim } from '/@/api/identity/user';
 
   export default defineComponent({
     name: 'UserTable',
@@ -175,6 +182,10 @@
         setUserStartupMenu(userId, meunId);
       }
 
+      function handleShowClaims(record) {
+        openClaimModal(true, { id: record.id });
+      }
+
       return {
         L,
         loadMenuRef,
@@ -189,7 +200,7 @@
         registerPasswordModal,
         showPasswordModal,
         registerClaimModal,
-        openClaimModal,
+        handleShowClaims,
         handleDelete,
         registerLockModal,
         showLockModal,
@@ -202,6 +213,10 @@
         handleChangeMenu,
         handleChangeStartupMenu,
         getListByUser,
+        getUserClaims,
+        createClaim,
+        updateClaim,
+        deleteClaim,
       };
     },
   });

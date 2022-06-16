@@ -164,6 +164,8 @@ export interface BasicTableProps<T = any> {
   api?: (...arg: any) => Promise<any>;
   // 请求之前处理参数
   beforeFetch?: Fn;
+  // 响应之前处理结果
+  beforeResponse?: Fn;
   // 自定义处理接口返回参数
   afterFetch?: Fn;
   // 查询条件请求之前处理
@@ -309,7 +311,7 @@ export interface BasicTableProps<T = any> {
    * you need to add style .ant-table td { white-space: nowrap; }.
    * @type object
    */
-  scroll?: { x?: number | true; y?: number };
+  scroll?: { x?: string | number | true; y?: string | number };
 
   /**
    * Whether to show table header

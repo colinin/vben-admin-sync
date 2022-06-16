@@ -66,7 +66,7 @@
         canResize: false,
         immediate: true,
         formConfig: getSearchFormSchemas(),
-        scroll: { x: true },
+        scroll: { x: 'max-content', y: '100%' },
         actionColumn: {
           width: 180,
           title: L('Actions'),

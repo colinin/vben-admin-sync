@@ -122,7 +122,7 @@
   import { useTableContext } from '../../hooks/useTableContext';
   import { useDesign } from '/@/hooks/web/useDesign';
   // import { useSortable } from '/@/hooks/web/useSortable';
-  import { isFunction, isNullAndUnDef } from '/@/utils/is';
+  import { isFunction, isNullAndUnDef, isNumber } from '/@/utils/is';
   import { getPopupContainer as getParentContainer } from '/@/utils';
   import { cloneDeep, omit } from 'lodash-es';
   import Sortablejs from 'sortablejs';
@@ -344,7 +344,9 @@
       function handleDragChange(e: ChangeEvent) {
         const columns = getColumns() as BasicColumn[];
         columns.forEach((col) => {
-          col.resizable = e.target.checked;
+          if (isNumber(col.width)) {
+            col.resizable = e.target.checked;
+          }
         });
         setColumns(columns);
       }

@@ -37,7 +37,7 @@
             {
               auth: 'AbpIdentity.Users.ManageClaims',
               label: L('Claim'),
-              onClick: openClaimModal.bind(null, true, record, true),
+              onClick: handleShowClaims.bind(null, record),
             },
             {
               auth: 'Platform.Menu.ManageRoles',
@@ -50,7 +50,13 @@
     </BasicTable>
     <RoleModal @register="registerModal" @change="reloadTable" />
     <PermissionModal @register="registerPermissionModal" />
-    <ClaimModal @register="registerClaimModal" />
+    <ClaimModal
+      @register="registerClaimModal"
+      :fetch-api="getRoleClaims"
+      :create-api="createClaim"
+      :update-api="updateClaim"
+      :delete-api="deleteClaim"
+    />
     <MenuModal
       @register="registerMenuModal"
       :loading="loadMenuRef"
@@ -67,13 +73,14 @@
   import { usePermission } from '/@/hooks/web/usePermission';
   import { useModal } from '/@/components/Modal';
   import RoleModal from './RoleModal.vue';
-  import ClaimModal from './ClaimModal.vue';
   import MenuModal from '../../components/MenuModal.vue';
+  import ClaimModal from '../../components/ClaimModal.vue';
   import { PermissionModal } from '/@/components/Permission';
   import { BasicTable, TableAction } from '/@/components/Table';
   import { useRoleTable } from '../hooks/useRoleTable';
   import { usePermission as usePermissionModal } from '../hooks/usePermission';
   import { getListByRole, setRoleMenu, setRoleStartupMenu } from '/@/api/platform/menu';
+  import { getClaimList as getRoleClaims, createClaim, updateClaim, deleteClaim } from '/@/api/identity/role';
 
   export default defineComponent({
     name: 'RoleTable',
@@ -126,6 +133,10 @@
         openModal(true, record, true);
       }
 
+      function handleShowClaims(record) {
+        openClaimModal(true, { id: record.id });
+      }
+
       return {
         L,
         loadMenuRef,
@@ -134,7 +145,7 @@
         reloadTable,
         registerModal,
         registerClaimModal,
-        openClaimModal,
+        handleShowClaims,
         registerPermissionModal,
         showPermissionModal,
         registerMenuModal,
@@ -145,6 +156,10 @@
         handleChangeMenu,
         handleChangeStartupMenu,
         getListByRole,
+        getRoleClaims,
+        createClaim,
+        updateClaim,
+        deleteClaim,
       };
     },
   });

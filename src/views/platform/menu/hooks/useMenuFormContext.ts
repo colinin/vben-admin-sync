@@ -121,8 +121,6 @@ export function useMenuFormContext({ menuModel, formElRef, framework }: UseMenuF
           labelField: 'displayName',
           valueField: 'id',
           onChange(val) {
-            const menu = unref(menuModel);
-            menu.layoutId = val;
             fetchLayoutResource(val);
           },
           onOptionsChange() {

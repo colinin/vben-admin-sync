@@ -246,6 +246,7 @@ export function useDataSource(
       defSort,
       fetchSetting,
       beforeFetch,
+      beforeResponse,
       afterFetch,
       useSearchForm,
       pagination,
@@ -286,7 +287,13 @@ export function useDataSource(
         params = (await beforeFetch(params)) || params;
       }
 
-      const res = await api(params);
+      let res = await api(params);
+
+      // 增加用户自定义的返回数据处理函数
+      if (beforeResponse && isFunction(beforeResponse)) {
+        res = beforeResponse(res);
+      }
+
       rawDataSourceRef.value = res;
 
       const isArrayResult = Array.isArray(res);
