@@ -318,7 +318,13 @@
               }
 
               plainSortOptions.value = columns;
-              setColumns(columns);
+              // fix: 修复ColumnSetting中默认隐藏列拖拽排序错误的bug (#1931)
+              // https://github.com/vbenjs/vue-vben-admin/commit/50468e9581c93e95df21447bec30b6148541c46b
+              setColumns(
+                columns
+                  .map((col: Options) => col.value)
+                  .filter((value: string) => state.checkedList.includes(value)),
+              );
             },
           });
           // 记录原始order 序列
