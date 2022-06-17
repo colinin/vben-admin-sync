@@ -127,7 +127,7 @@
       required: true,
     },
     tabPosition: {
-      type: String,
+      type: String as PropType<'left' | 'right' | 'top' | 'bottom'>,
       defaultValue: 'top',
     },
   } as const; // 对于存在必输项的props see: https://blog.csdn.net/q535999731/article/details/109578885

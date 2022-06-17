@@ -1,6 +1,8 @@
+import { RuleType } from 'ant-design-vue/lib/form/interface';
+
 interface IRule {
-  type?: string;
-  trigger?: string;
+  type?: RuleType | 'array';
+  trigger?: 'blur' | 'change' | ['change', 'blur'];
 }
 
 export interface IField extends IRule {
@@ -67,4 +69,9 @@ export interface IFieldContains extends IField {
 export interface IFieldValidator extends IFieldRequired {
   /** 值是否有效验证器 */
   validator: (value: any) => boolean;
+}
+
+export interface IDefineFieldValidator extends IFieldRequired {
+  message?: string;
+  validator: (rule: any, value: any, callback: any, source?: any, options?: any) => Promise<void> | void;
 }

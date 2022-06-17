@@ -152,8 +152,8 @@ const transform: AxiosTransform = {
     // const { t } = useI18n();
     const errorLogStore = useErrorLogStoreWithOut();
     errorLogStore.addAjaxErrorInfo(error);
-    checkResponse(error.response);
-    return Promise.reject(error);
+    const resMessage = checkResponse(error.response);
+    return Promise.reject(resMessage ?? error);
   },
 };
 

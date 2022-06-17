@@ -153,10 +153,11 @@ export function useProfile() {
     const groupResult = await getAssignableNotifiers();
     const mySubResult = await getMySubscribes();
     const mySubNotifies = mySubResult.items.map((x) => x.name);
-    const notifies: ListItem[] = [];
+    const notifies: {[key: string]: ListItem[] } = {};
     groupResult.items.forEach((group) => {
+      notifies[group.displayName] = [];
       group.notifications.forEach((notifier) => {
-        notifies.push({
+        notifies[group.displayName].push({
           key: notifier.name,
           title: notifier.displayName,
           description: notifier.description,

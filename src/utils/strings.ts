@@ -37,3 +37,9 @@ export function tryToJson(str: string | undefined) {
     return str;
   }
 }
+
+export function getUnique(val: string) {
+  const arr = val.split('');
+  const newArr = [...new Set(arr)];
+  return newArr.join('');
+}
