@@ -9,17 +9,15 @@
     <Form
       ref="formElRef"
       :colon="true"
-      label-align="right"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 18 }"
       :model="modelRef"
+      layout="vertical"
     >
       <Tabs v-model:activeKey="activeKey">
         <TabPane key="basic" :tab="L('BasicInfo')">
           <FormItem :label="L('DisplayName:TenantId')">
             <Input readonly :value="getTenant" />
           </FormItem>
-          <FormItem :label="L('DisplayName:SendExactSameData')">
+          <FormItem>
             <Checkbox disabled :checked="modelRef.sendExactSameData">{{
               L('DisplayName:SendExactSameData')
             }}</Checkbox>
@@ -28,12 +26,7 @@
             <Input readonly :value="getDateTime(modelRef.creationTime)" />
           </FormItem>
           <FormItem :label="L('DisplayName:RequestHeaders')">
-            <CodeEditor
-              readonly
-              style="height: 300px; width: 100%"
-              :mode="MODE.JSON"
-              :value="modelRef.requestHeaders"
-            />
+            <CodeEditorX readonly :mode="MODE.JSON" v-model="modelRef.requestHeaders" />
           </FormItem>
           <FormItem :label="L('DisplayName:ResponseStatusCode')">
             <Tag
@@ -43,15 +36,10 @@
             >
           </FormItem>
           <FormItem :label="L('DisplayName:ResponseHeaders')">
-            <CodeEditor
-              readonly
-              style="height: 300px; width: 100%"
-              :mode="MODE.JSON"
-              :value="modelRef.responseHeaders"
-            />
+            <CodeEditorX readonly :mode="MODE.JSON" v-model="modelRef.responseHeaders" />
           </FormItem>
           <FormItem :label="L('DisplayName:Response')">
-            <TextArea readonly :value="modelRef.response" :auto-size="{ minRows: 10 }" />
+            <CodeEditorX readonly :mode="MODE.HTML" v-model="modelRef.response" />
           </FormItem>
         </TabPane>
 
@@ -69,17 +57,12 @@
             <Input readonly :value="getDateTime(modelRef.webhookEvent.creationTime)" />
           </FormItem>
           <FormItem :label="L('DisplayName:Data')">
-            <CodeEditor
-              readonly
-              style="height: 300px; width: 100%"
-              :mode="MODE.JSON"
-              :value="modelRef.webhookEvent.data"
-            />
+            <CodeEditorX readonly :mode="MODE.JSON" v-model="modelRef.webhookEvent.data" />
           </FormItem>
         </TabPane>
 
         <TabPane v-if="subscriptionRef.id" key="subscription" :tab="L('Subscriptions')">
-          <FormItem :label="L('DisplayName:IsActive')">
+          <FormItem>
             <Checkbox disabled :checked="subscriptionRef.isActive">{{
               L('DisplayName:IsActive')
             }}</Checkbox>
@@ -100,19 +83,17 @@
             <Input readonly :value="getDateTime(subscriptionRef.creationTime)" />
           </FormItem>
           <FormItem :label="L('DisplayName:Webhooks')">
-            <TextArea
+            <!-- <TextArea
               readonly
               :value="getWebhooks(subscriptionRef.webhooks)"
               :auto-size="{ minRows: 5, maxRows: 10 }"
-            />
+            /> -->
+            <template v-for="(webhook) in subscriptionRef.webhooks" :key="webhook">
+              <Tag color="#1c6a8f">{{ webhook }}</Tag>
+            </template>
           </FormItem>
           <FormItem name="headers" :label="L('DisplayName:Headers')">
-            <CodeEditor
-              readonly
-              style="height: 300px; width: 100%"
-              :mode="MODE.JSON"
-              :value="subscriptionRef.headers"
-            />
+            <CodeEditorX readonly :mode="MODE.JSON" v-model="subscriptionRef.headers" />
           </FormItem>
         </TabPane>
       </Tabs>
@@ -124,7 +105,7 @@
   import { ref, unref, computed, watch } from 'vue';
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { Checkbox, Form, Tabs, Tag, Input, InputPassword } from 'ant-design-vue';
-  import { CodeEditor, MODE } from '/@/components/CodeEditor';
+  import { CodeEditorX, MODE } from '/@/components/CodeEditor';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { findTenantById } from '/@/api/multi-tenancy/tenants';
   import { getById } from '/@/api/webhooks/send-attempts';
@@ -136,7 +117,6 @@
 
   const FormItem = Form.Item;
   const TabPane = Tabs.TabPane;
-  const TextArea = Input.TextArea;
 
   const { L } = useLocalization('WebhooksManagement');
   const formElRef = ref<any>();
@@ -151,11 +131,6 @@
   const getDateTime = computed(() => {
     return (date?: Date) => {
       return date ? formatToDateTime(date) : '';
-    };
-  });
-  const getWebhooks = computed(() => {
-    return (webhooks: string[]) => {
-      return webhooks.reduce((hook, p) => hook + p + '\n', '');
     };
   });
   const getTenant = computed(() => {

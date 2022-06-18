@@ -34,6 +34,7 @@
         tenantIdRef.value = data.id;
       });
       const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
+        layout: 'vertical',
         schemas: getModalFormSchemas(),
         showActionButtonGroup: false,
       });

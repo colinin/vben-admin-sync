@@ -10,14 +10,11 @@
     <Form
       ref="formElRef"
       :colon="true"
-      label-align="right"
-      layout="horizontal"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 18 }"
+      layout="vertical"
       :model="modelRef"
       :rules="modelRules"
     >
-      <FormItem name="isActive" :label="L('DisplayName:IsActive')">
+      <FormItem name="isActive">
         <Checkbox v-model:checked="modelRef.isActive">{{ L('DisplayName:IsActive') }}</Checkbox>
       </FormItem>
       <FormItem name="tenantId" :label="L('DisplayName:TenantId')">
@@ -57,8 +54,9 @@
         </Select>
       </FormItem>
       <FormItem name="headers" :label="L('DisplayName:Headers')">
-        <CodeEditor style="height: 300px" :mode="MODE.JSON" v-model:value="modelRef.headers" />
+        <CodeEditorX style="height: 300px" :mode="MODE.JSON" v-model="modelRef.headers" />
       </FormItem>
+      
     </Form>
   </BasicModal>
 </template>
@@ -70,7 +68,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Checkbox, Form, Select, Tooltip, Input, InputPassword } from 'ant-design-vue';
   import { isString } from '/@/utils/is';
-  import { CodeEditor, MODE } from '/@/components/CodeEditor';
+  import { CodeEditorX, MODE } from '/@/components/CodeEditor';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { Tenant } from '/@/api/saas/model/tenantModel';
   import { getList as getTenants } from '/@/api/saas/tenant';

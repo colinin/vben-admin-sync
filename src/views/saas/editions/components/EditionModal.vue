@@ -33,6 +33,7 @@
     fetchEdition();
   });
   const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
+    layout: 'vertical',
     schemas: getModalFormSchemas(),
     showActionButtonGroup: false,
   });

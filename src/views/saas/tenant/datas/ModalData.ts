@@ -37,10 +37,11 @@ export function getModalFormSchemas(): FormSchema[] {
     {
       field: 'isActive',
       component: 'Checkbox',
-      label: L('DisplayName:IsActive'),
+      label: '',
       labelWidth: 50,
       colProps: { span: 24 },
       defaultValue: true,
+      renderComponentContent: L('DisplayName:IsActive'),
     },
     {
       field: 'name',
