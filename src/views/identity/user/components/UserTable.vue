@@ -9,21 +9,19 @@
           >{{ L('NewUser') }}</a-button
         >
       </template>
-      <template #phoneNumberConfirmed="{ record }">
-        <Tag
-          style="margin-right: 10px; margin-bottom: 5px"
-          :color="record.phoneNumberConfirmed ? 'green' : 'orange'"
-        >
-          {{ record.phoneNumberConfirmed }}
-        </Tag>
+      <template #name="{ record }">
+        <span>{{ record.userName }}</span>
+        <Tag v-if="!record.isActive" style="margin-left: 5px" color="orange">{{ L('UnActived') }}</Tag>
       </template>
-      <template #emailConfirmed="{ record }">
-        <Tag
-          style="margin-right: 10px; margin-bottom: 5px"
-          :color="record.emailConfirmed ? 'green' : 'orange'"
-        >
-          {{ record.emailConfirmed }}
-        </Tag>
+      <template #phoneNumber="{ record }">
+        <span>{{ record.phoneNumber }}</span>
+        <Tag v-if="record.phoneNumberConfirmed" style="margin-left: 5px" color="green">{{ L('Confirmed') }}</Tag>
+        <Tag v-else color="orange" style="margin-left: 5px">{{ L('UnConfirmed') }}</Tag>
+      </template>
+      <template #email="{ record }">
+        <span>{{ record.email }}</span>
+        <Tag v-if="record.emailConfirmed" style="margin-left: 5px" color="green">{{ L('Confirmed') }}</Tag>
+        <Tag v-else color="orange" style="margin-left: 5px">{{ L('UnConfirmed') }}</Tag>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -108,17 +106,17 @@
   import { useModal } from '/@/components/Modal';
   import { PermissionModal } from '/@/components/Permission';
   import { BasicTable, TableAction } from '/@/components/Table';
-  import UserModal from './UserModal.vue';
-  import PasswordModal from './PasswordModal.vue';
-  import LockModal from './LockModal.vue';
-  import MenuModal from '../../components/MenuModal.vue';
-  import ClaimModal from '../../components/ClaimModal.vue';
   import { useUserTable } from '../hooks/useUserTable';
   import { usePassword } from '../hooks/usePassword';
   import { useLock } from '../hooks/useLock';
   import { usePermission as usePermissionModal } from '../hooks/usePermission';
   import { getListByUser, setUserMenu, setUserStartupMenu } from '/@/api/platform/menu';
   import { getClaimList as getUserClaims, createClaim, updateClaim, deleteClaim } from '/@/api/identity/user';
+  import UserModal from './UserModal.vue';
+  import PasswordModal from './PasswordModal.vue';
+  import LockModal from './LockModal.vue';
+  import MenuModal from '../../components/MenuModal.vue';
+  import ClaimModal from '../../components/ClaimModal.vue';
 
   export default defineComponent({
     name: 'UserTable',

@@ -1,6 +1,12 @@
 <template>
   <div class="content">
     <BasicTable @register="registerTable">
+      <template #name="{ record }">
+        <Tag v-if="record.isStatic" style="margin-right: 5px" color="#8baac4">{{ L('Static') }}</Tag>
+        <Tag v-if="record.isDefault" style="margin-right: 5px" color="#108ee9">{{ L('DisplayName:IsDefault') }}</Tag>
+        <Tag v-if="record.isPublic" style="margin-right: 5px" color="#87d068">{{ L('Public') }}</Tag>
+        <span>{{ record.name }}</span>
+      </template>
       <template #toolbar>
         <a-button
           v-if="hasPermission('AbpIdentity.Roles.Create')"
@@ -69,18 +75,19 @@
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
+  import { Tag } from 'ant-design-vue';
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { useModal } from '/@/components/Modal';
-  import RoleModal from './RoleModal.vue';
-  import MenuModal from '../../components/MenuModal.vue';
-  import ClaimModal from '../../components/ClaimModal.vue';
   import { PermissionModal } from '/@/components/Permission';
   import { BasicTable, TableAction } from '/@/components/Table';
   import { useRoleTable } from '../hooks/useRoleTable';
   import { usePermission as usePermissionModal } from '../hooks/usePermission';
   import { getListByRole, setRoleMenu, setRoleStartupMenu } from '/@/api/platform/menu';
   import { getClaimList as getRoleClaims, createClaim, updateClaim, deleteClaim } from '/@/api/identity/role';
+  import RoleModal from './RoleModal.vue';
+  import MenuModal from '../../components/MenuModal.vue';
+  import ClaimModal from '../../components/ClaimModal.vue';
 
   export default defineComponent({
     name: 'RoleTable',
@@ -89,6 +96,7 @@
       ClaimModal,
       MenuModal,
       RoleModal,
+      Tag,
       TableAction,
       PermissionModal,
     },

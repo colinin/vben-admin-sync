@@ -17,6 +17,9 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 200,
       sorter: true,
+      slots: {
+        customRender: 'name',
+      },
     },
     {
       title: L('DisplayName:EditionName'),

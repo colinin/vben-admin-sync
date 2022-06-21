@@ -17,6 +17,9 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 'auto',
       sorter: true,
+      slots: {
+        customRender: 'name',
+      },
     },
   ];
 }
@@ -34,14 +37,18 @@ export function getClaimColumns(): BasicColumn[] {
       dataIndex: 'claimType',
       align: 'left',
       width: 150,
-      sortOrder: true,
+      sorter: (last, next) => {
+        return last.claimType.localeCompare(next.claimType);
+      },
     },
     {
       title: L('DisplayName:ClaimValue'),
       dataIndex: 'claimValue',
       align: 'left',
       width: 'auto',
-      sortOrder: true,
+      sorter: (last, next) => {
+        return last.claimValue.localeCompare(next.claimValue);
+      },
     },
   ];
 }

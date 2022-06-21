@@ -1,6 +1,10 @@
 <template>
   <div>
     <BasicTable ref="tableElRef" @register="registerTable">
+      <template #name="{ record }">
+        <span>{{ record.name }}</span>
+        <Tag v-if="!record.isActive" style="margin-left: 5px" color="orange">{{ L('UnActived') }}</Tag>
+      </template>
       <template #toolbar>
         <a-button
           v-if="hasPermission('AbpSaas.Tenants.Create')"
@@ -55,6 +59,7 @@
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
+  import { Tag } from 'ant-design-vue';
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { useModal } from '/@/components/Modal';
@@ -68,7 +73,7 @@
 
   export default defineComponent({
     name: 'TenantTable',
-    components: { BasicTable, FeatureModal, TableAction, TenantModal, TenantConnectionModal },
+    components: { BasicTable, FeatureModal, Tag, TableAction, TenantModal, TenantConnectionModal },
     setup() {
       const { L } = useLocalization('AbpSaas', 'AbpFeatureManagement');
       const { hasPermission } = usePermission();
