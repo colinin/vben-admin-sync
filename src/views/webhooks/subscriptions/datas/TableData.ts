@@ -16,7 +16,7 @@ export function getDataColumns(): BasicColumn[] {
       title: L('DisplayName:TenantId'),
       dataIndex: 'tenantId',
       align: 'left',
-      width: 150,
+      width: 300,
       sorter: true,
       fixed: 'left',
     },

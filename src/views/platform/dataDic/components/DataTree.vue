@@ -1,7 +1,7 @@
 <template>
   <Card :title="title" size="small">
     <template #extra>
-      <a-button type="primary" @click="openDataModal.bind(null, true)">{{ L('Data:AddNew') }}</a-button>
+      <a-button type="primary" @click="openDataModal(true, {})">{{ L('Data:AddNew') }}</a-button>
     </template>
 
     <BasicTree

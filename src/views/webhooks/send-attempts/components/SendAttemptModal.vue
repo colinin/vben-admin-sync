@@ -39,7 +39,7 @@
             <CodeEditorX readonly :mode="MODE.JSON" v-model="modelRef.responseHeaders" />
           </FormItem>
           <FormItem :label="L('DisplayName:Response')">
-            <CodeEditorX readonly :mode="MODE.HTML" v-model="modelRef.response" />
+            <CodeEditorX readonly v-model="modelRef.response" />
           </FormItem>
         </TabPane>
 

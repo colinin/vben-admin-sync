@@ -47,10 +47,9 @@
   import { ListResultDto } from '/@/api/model/baseModel';
   import { OssObject } from '/@/api/oss-management/model/ossModel';
 
-  import { getList as getPrivates } from '/@/api/oss-management/private';
+  import { getList as getPrivates, share } from '/@/api/oss-management/private';
   import { getList as getPublices } from '/@/api/oss-management/public';
-  import { share } from '/@/api/oss-management/private';
-  import { generateOssUrl } from '/@/api/oss-management/oss';
+  import { generateOssUrl, deleteObject } from '/@/api/oss-management/oss';
 
   const props = defineProps({
     selectGroup: {
@@ -73,7 +72,7 @@
 
   const { L } = useLocalization('AbpOssManagement', 'AbpUi');
   const { createConfirm, createMessage } = useMessage();
-  const [registerTable, { setTableData }] = useTable({
+  const [registerTable, { setTableData, deleteTableDataRecord }] = useTable({
     rowKey: 'name',
     columns: getDataColumns(),
     title: L('FileList'),
@@ -150,8 +149,15 @@
       title: L('AreYouSure'),
       content: L('ItemWillBeDeletedMessage'),
       onOk: () => {
-        props.selectGroup === 'private' && emit('delete:file:private', record);
-        props.selectGroup === 'public' && emit('delete:file:public', record);
+        deleteObject({
+          bucket: bucket.value,
+          path: record.path,
+          object: record.name,
+        }).then(() => {
+          deleteTableDataRecord(record.name);
+          props.selectGroup === 'private' && emit('delete:file:private', record);
+          props.selectGroup === 'public' && emit('delete:file:public', record);
+        });
       },
     });
   }
