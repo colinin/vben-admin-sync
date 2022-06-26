@@ -52,7 +52,7 @@
   import SendAttemptModal from './SendAttemptModal.vue';
 
   const { createConfirm, createMessage } = useMessage();
-  const { L } = useLocalization('WebhooksManagement', 'AbpUi');
+  const { L } = useLocalization(['WebhooksManagement', 'AbpUi']);
   const [registerModal, { openModal }] = useModal();
   const [registerTable, { reload, setLoading }] = useTable({
     rowKey: 'id',

@@ -55,7 +55,7 @@
   import { formatPagedRequest } from '/@/utils/http/abp/helper';
   import EditionModal from './EditionModal.vue';
 
-  const { L } = useLocalization('AbpSaas', 'AbpFeatureManagement');
+  const { L } = useLocalization(['AbpSaas', 'AbpFeatureManagement']);
   const { createConfirm } = useMessage();
   const { hasPermission } = usePermission();
   const [registerModal, { openModal }] = useModal();

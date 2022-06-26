@@ -46,7 +46,7 @@
     },
   });
   const { hasPermission } = usePermission();
-  const { L } = useLocalization('AbpOssManagement', 'AbpUi');
+  const { L } = useLocalization(['AbpOssManagement', 'AbpUi']);
   const [registerFolderModal, { openModal: openFolderModal }] = useModal();
   const enabledNewFolder = computed(() => {
     return hasPermission('AbpOssManagement.OssObject.Create') && (props.bucket ? true : false);

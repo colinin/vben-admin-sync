@@ -58,7 +58,7 @@
       TableAction,
     },
     setup() {
-      const { L } = useLocalization('AbpOssManagement', 'AbpUi');
+      const { L } = useLocalization(['AbpOssManagement', 'AbpUi']);
       const { hasPermission } = usePermission();
       const [registerModal, { openModal, closeModal }] = useModal();
       const [registerForm, { validate, resetFields }] = useForm({

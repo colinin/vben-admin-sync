@@ -1,6 +1,5 @@
 import { useLocalization } from '/@/hooks/abp/useLocalization';
 import { FormSchema } from '/@/components/Form/index';
-import { DataItem } from '/@/api/platform/model/dataItemModel';
 
 import { valueTypeOptions } from './BasicType';
 

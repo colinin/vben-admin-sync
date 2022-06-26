@@ -48,7 +48,7 @@
       LayoutModal,
     },
     setup() {
-      const { L } = useLocalization('AppPlatform', 'AbpUi');
+      const { L } = useLocalization(['AppPlatform', 'AbpUi']);
       const layoutId = ref('');
       const [registerTable, { reload: reloadTable }] = useTable({
         rowKey: 'id',

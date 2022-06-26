@@ -59,7 +59,7 @@
       TextModal,
     },
     setup() {
-      const { L } = useLocalization('LocalizationManagement', 'AbpUi');
+      const { L } = useLocalization(['LocalizationManagement', 'AbpUi']);
       const { hasPermission } = usePermission();
       const [registerModal, { openModal }] = useModal();
       const [registerTable, { reload }] = useTable({

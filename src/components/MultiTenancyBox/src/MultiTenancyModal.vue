@@ -31,13 +31,6 @@
       const globSetting = useGlobSetting();
       const { L } = useLocalization('AbpUiMultiTenancy');
       const { createMessage } = useMessage();
-      const [registerModal, { closeModal, changeLoading }] = useModalInner((name) => {
-        nextTick(() => {
-          setFieldsValue({
-            name: name,
-          });
-        });
-      });
       const [registerForm, { validate, setFieldsValue }] = useForm({
         showActionButtonGroup: false,
         layout: 'vertical',
@@ -49,6 +42,13 @@
             colProps: { span: 24 },
           },
         ],
+      });
+      const [registerModal, { closeModal, changeLoading }] = useModalInner((name) => {
+        nextTick(() => {
+          setFieldsValue({
+            name: name,
+          });
+        });
       });
 
       return {

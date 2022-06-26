@@ -50,7 +50,7 @@
     setup() {
       const userStore = useUserStore();
       const activeTabKey = ref('cloud');
-      const { L } = useLocalization('AbpOssManagement', 'AbpSettingManagement');
+      const { L } = useLocalization(['AbpOssManagement', 'AbpSettingManagement']);
       const components = [
         {
           key: 'cloud',

@@ -26,7 +26,7 @@
     components: { BasicForm, BasicModal },
     emits: ['change', 'register'],
     setup(_props, { emit }) {
-      const { L } = useLocalization('LocalizationManagement', 'AbpUi');
+      const { L } = useLocalization(['LocalizationManagement', 'AbpUi']);
       const idRef = ref<number | undefined>(undefined);
       const modelRef = ref<Nullable<Text>>(null);
       const formElRef = ref<Nullable<FormActionType>>(null);

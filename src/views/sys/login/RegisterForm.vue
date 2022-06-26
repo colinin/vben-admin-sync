@@ -61,7 +61,7 @@
   const ACol = Col;
   const ARow = Row;
   const FormItem = Form.Item;
-  const { L } = useLocalization('AbpAccount', 'AbpIdentity');
+  const { L } = useLocalization(['AbpAccount', 'AbpIdentity']);
   const { handleBackLogin, getLoginState, setLoginState } = useLoginState();
   const glob = useGlobSetting();
 

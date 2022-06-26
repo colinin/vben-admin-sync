@@ -59,7 +59,7 @@
     props,
     emits: ['reload'],
     setup(props, { emit }) {
-      const { L } = useLocalization('AppPlatform', 'AbpUi');
+      const { L } = useLocalization(['AppPlatform', 'AbpUi']);
       const dataItems = ref<DataItem[]>([]);
       const [registerTable] = useTable({
         rowKey: 'id',

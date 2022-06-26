@@ -45,7 +45,7 @@
   });
   const emit = defineEmits(['delete:file:share']);
 
-  const { L } = useLocalization('AbpOssManagement', 'AbpUi');
+  const { L } = useLocalization(['AbpOssManagement', 'AbpUi']);
   const { createConfirm, createMessage } = useMessage();
   const [registerTable, { setTableData }] = useTable({
     rowKey: 'url',

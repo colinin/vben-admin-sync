@@ -132,7 +132,7 @@
       MenuModal,
     },
     setup(_props, { emit }) {
-      const { L } = useLocalization('AbpIdentity', 'AppPlatform');
+      const { L } = useLocalization(['AbpIdentity', 'AppPlatform']);
       const loadMenuRef = ref(false);
       const { hasPermission } = usePermission();
       const [registerModal, { openModal }] = useModal();

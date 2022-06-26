@@ -86,7 +86,7 @@
     },
     emits: ['register', 'change'],
     setup(_, { emit }) {
-      const { L } = useLocalization('AbpIdentity', 'AbpIdentityServer');
+      const { L } = useLocalization(['AbpIdentity', 'AbpIdentityServer']);
       const activedTab = ref('info');
       const userRef = ref<Recordable>({});
       const formElRef = ref<Nullable<FormActionType>>(null);

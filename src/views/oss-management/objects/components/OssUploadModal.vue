@@ -63,7 +63,7 @@
     components: { BasicModal, BasicTable, TableAction, Tag, Tooltip },
     setup() {
       let uploader: any = null;
-      const { L } = useLocalization('AbpOssManagement', 'AbpUi');
+      const { L } = useLocalization(['AbpOssManagement', 'AbpUi']);
       const bucket = ref('');
       const path = ref('');
       const btnRef = ref<any>();

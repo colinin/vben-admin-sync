@@ -27,7 +27,7 @@
     setup(_, { emit }) {
       const dataItem = ref<DataItem>();
       const { createMessage } = useMessage();
-      const { L } = useLocalization('AppPlatform', 'AbpUi');
+      const { L } = useLocalization(['AppPlatform', 'AbpUi']);
       const schemas = getDataItemFormSchemas();
 
       watch(

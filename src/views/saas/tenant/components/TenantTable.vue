@@ -75,7 +75,7 @@
     name: 'TenantTable',
     components: { BasicTable, FeatureModal, Tag, TableAction, TenantModal, TenantConnectionModal },
     setup() {
-      const { L } = useLocalization('AbpSaas', 'AbpFeatureManagement');
+      const { L } = useLocalization(['AbpSaas', 'AbpFeatureManagement']);
       const { hasPermission } = usePermission();
       const tableElRef = ref<Nullable<TableActionType>>(null);
       const [registerConnectModal, { openModal: openConnectModal }] = useModal();

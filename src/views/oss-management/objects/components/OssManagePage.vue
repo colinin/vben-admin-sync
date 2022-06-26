@@ -49,7 +49,7 @@
       FileList,
     },
     setup() {
-      const { L } = useLocalization('AbpOssManagement', 'AbpUi');
+      const { L } = useLocalization(['AbpOssManagement', 'AbpUi']);
       const { hasPermission } = usePermission();
       const currentPath = ref('');
       const currentBucket = ref('');

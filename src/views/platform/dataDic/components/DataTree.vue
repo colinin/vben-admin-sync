@@ -41,7 +41,7 @@
     },
     emits: ['change', 'append-item'],
     setup(_, { emit }) {
-      const { L } = useLocalization('AppPlatform', 'AbpUi');
+      const { L } = useLocalization(['AppPlatform', 'AbpUi']);
       const title = L('DisplayName:DataDictionary');
       const treeData = ref<Data[]>([]);
       const replaceFields = ref({

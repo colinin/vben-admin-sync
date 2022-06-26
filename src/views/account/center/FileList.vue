@@ -70,7 +70,7 @@
   });
   const emit = defineEmits(['delete:file:private', 'delete:file:public', 'append:folder']);
 
-  const { L } = useLocalization('AbpOssManagement', 'AbpUi');
+  const { L } = useLocalization(['AbpOssManagement', 'AbpUi']);
   const { createConfirm, createMessage } = useMessage();
   const [registerTable, { setTableData, deleteTableDataRecord }] = useTable({
     rowKey: 'name',

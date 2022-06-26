@@ -75,7 +75,7 @@
   });
   const { hasPermission } = usePermission();
   const { createConfirm, createMessage } = useMessage();
-  const { L } = useLocalization('AbpOssManagement', 'AbpUi');
+  const { L } = useLocalization(['AbpOssManagement', 'AbpUi']);
   const [registerUploadModal, { openModal: openUploadModal }] = useModal();
   const [registerPreviewModal, { openModal: openPreviewModal }] = useModal();
   const [registerTable, { reload, getSelectRowKeys, setTableData }] = useTable({
