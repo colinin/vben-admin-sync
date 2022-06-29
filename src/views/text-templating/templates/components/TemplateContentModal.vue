@@ -8,7 +8,11 @@
       :ok-text="L('SaveContent')"
       @ok="handleSubmit"
     >
-      <Alert v-if="isInlineLocalized" style="margin-bottom: 15px;" :message="L('InlineContentDescription')" type="warning" />
+      <Alert v-if="isInlineLocalized" style="margin-bottom: 15px;" type="warning">
+        <template #message>
+          <MarkdownViewer :value="L('InlineContentDescription')" />
+        </template>
+      </Alert>
       <Card :title="getCardTitle">
         <template v-if="buttonEnabled" #extra>
           <Button danger type="primary" style="margin-right: 15px;" @click="handleRestoreToDefault">{{ L('RestoreToDefault') }}</Button>
@@ -25,6 +29,7 @@
   import { computed, ref, unref, nextTick } from 'vue';
   import { Alert, Button, Card } from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form';
+  import { MarkdownViewer } from '/@/components/Markdown';
   import { BasicModal, useModal, useModalInner } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useLocalization } from '/@/hooks/abp/useLocalization';

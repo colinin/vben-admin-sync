@@ -16,7 +16,7 @@ export function getDataColumns(): BasicColumn[] {
     {
       title: L('DisplayName:IsInlineLocalized'),
       dataIndex: 'isInlineLocalized',
-      align: 'left',
+      align: 'center',
       width: 150,
       sorter: true,
       ellipsis: true,
@@ -25,7 +25,7 @@ export function getDataColumns(): BasicColumn[] {
     {
       title: L('DisplayName:IsLayout'),
       dataIndex: 'isLayout',
-      align: 'left',
+      align: 'center',
       width: 150,
       sorter: true,
       ellipsis: true,

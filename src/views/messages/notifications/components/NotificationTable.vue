@@ -9,6 +9,14 @@
       onChange: handleSelectRowChanged,
     }">
     <template #title="{ record }">
+      <Icon
+        v-if="record.state === NotificationReadState.Read"
+        class="title-icon"
+        icon="ic:outline-mark-email-read"
+        :size="20"
+        color="#00DD00"
+      />
+      <Icon v-else class="title-icon" icon="ic:outline-mark-email-unread" :size="20" color="#FF7744" />
       <a href="javascript:(0);" @click="handleExpanded(record)">{{ getTitle(record) }}</a>
     </template>
     <template #content="{ record }">
@@ -215,3 +223,9 @@
     }
   }
 </script>
+
+<style lang="less" scoped>
+  .title-icon {
+    margin-right: 5px;
+  }
+</style>

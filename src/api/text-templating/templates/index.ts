@@ -28,7 +28,9 @@ export const getContent = (input: TextTemplateContentGetInput) => {
     service: remoteServiceName,
     controller: controllerName,
     action: 'GetContentAsync',
-    params: input,
+    params: {
+      input: input,
+    },
   });
 }
 
@@ -37,7 +39,9 @@ export const getList = (input: TextTemplateDefinitionGetListInput) => {
     service: remoteServiceName,
     controller: controllerName,
     action: 'GetListAsync',
-    params: input,
+    params: {
+      input: input,
+    },
   });
 };
 

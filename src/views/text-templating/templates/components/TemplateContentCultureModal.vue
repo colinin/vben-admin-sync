@@ -148,7 +148,7 @@
             const textTemplate = unref(textTemplateRef);
             restoreToDefault({
               name: textTemplate!.name,
-              culture: input.targetCultureName,
+              culture: input.baseCultureName,
             }).then(() => {
               createMessage.success(L('TemplateContentRestoredToDefault'));
               return resolve(textTemplate!.name);
