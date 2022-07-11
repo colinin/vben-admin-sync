@@ -1,32 +1,34 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #action="{ record }">
-        <TableAction
-          :stop-button-propagation="true"
-          :actions="[
-            {
-              auth: 'AbpOssManagement.OssObject.Download',
-              ifShow: !record.isFolder,
-              label: L('Objects:Download'),
-              icon: 'ant-design:download-outlined',
-              onClick: handleDownload.bind(null, record),
-            },
-            {
-              label: L('Share'),
-              icon: 'ant-design:share-alt-outlined',
-              ifShow: shareEnabled,
-              onClick: handleShare.bind(null, record),
-            },
-            {
-              color: 'error',
-              label: L('Delete'),
-              icon: 'ant-design:delete-outlined',
-              ifShow: deleteEnabled,
-              onClick: handleDelete.bind(null, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :stop-button-propagation="true"
+            :actions="[
+              {
+                auth: 'AbpOssManagement.OssObject.Download',
+                ifShow: !record.isFolder,
+                label: L('Objects:Download'),
+                icon: 'ant-design:download-outlined',
+                onClick: handleDownload.bind(null, record),
+              },
+              {
+                label: L('Share'),
+                icon: 'ant-design:share-alt-outlined',
+                ifShow: shareEnabled,
+                onClick: handleShare.bind(null, record),
+              },
+              {
+                color: 'error',
+                label: L('Delete'),
+                icon: 'ant-design:delete-outlined',
+                ifShow: deleteEnabled,
+                onClick: handleDelete.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <BasicModal @register="registerShareModal" :title="L('Share')" @ok="handleShareFile">
@@ -92,7 +94,6 @@
       width: 240,
       title: L('Actions'),
       dataIndex: 'action',
-      slots: { customRender: 'action' },
     },
   });
 

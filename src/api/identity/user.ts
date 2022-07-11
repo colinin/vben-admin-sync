@@ -3,7 +3,7 @@ import {
   User,
   UserClaimListResult,
   CreateUser,
-  ChangePassword,
+  SetPassword,
   UpdateUser,
   GetUserPagedRequest,
   UserPagedResult,
@@ -46,7 +46,7 @@ export const createClaim = (id: string, input: CreateIdentityClaim) => {
   });
 };
 
-export const changePassword = (id: string, input: ChangePassword) => {
+export const changePassword = (id: string, input: SetPassword) => {
   return defAbpHttp.put<void>({
     url: Api.ChangePassword,
     data: input,

@@ -48,6 +48,7 @@
   import { DOC_URL } from '/@/settings/siteSetting';
 
   import { useUserStore } from '/@/store/modules/user';
+  import { useAbpStoreWithOut } from '/@/store/modules/abp';
   import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -80,10 +81,20 @@
       const go = useGo();
       const { getShowDoc, getUseLockPage } = useHeaderSetting();
       const userStore = useUserStore();
+      const abpStore = useAbpStoreWithOut();
 
       const getUserInfo = computed(() => {
-        const { realName = '', avatar, desc } = userStore.getUserInfo || {};
-        return { realName, avatar: avatar || headerImg, desc };
+        const { currentTenant } = abpStore.getApplication;
+        const { avatar, desc, realName, username } = userStore.getUserInfo || {};
+        let userName = realName ?? username;
+        if (currentTenant.name) {
+          userName = `${currentTenant.name}/${userName}`
+        }
+        return {
+          realName: userName,
+          avatar: avatar || headerImg,
+          desc
+        };
       });
 
       const [register, { openModal }] = useModal();

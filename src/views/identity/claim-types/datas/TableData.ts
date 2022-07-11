@@ -24,9 +24,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 150,
       sorter: true,
-      slots: {
-        customRender: 'types',
-      },
     },
     {
       title: L('IdentityClaim:Regex'),
@@ -41,9 +38,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 150,
       sorter: true,
-      slots: {
-        customRender: 'required',
-      },
     },
     {
       title: L('IdentityClaim:IsStatic'),
@@ -51,9 +45,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 150,
       sorter: true,
-      slots: {
-        customRender: 'static',
-      },
     },
     {
       title: L('IdentityClaim:Description'),

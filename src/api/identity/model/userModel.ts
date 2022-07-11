@@ -30,6 +30,10 @@ export interface ChangePassword {
   newPassword: string;
 }
 
+export interface SetPassword {
+  password: string;
+}
+
 /** 用户对象 */
 export class User extends FullAuditedEntityDto implements IUser {
   /** 用户名 */

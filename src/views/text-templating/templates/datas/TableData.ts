@@ -20,7 +20,6 @@ export function getDataColumns(): BasicColumn[] {
       width: 150,
       sorter: true,
       ellipsis: true,
-      slots: { customRender: 'inline' },
     },
     {
       title: L('DisplayName:IsLayout'),
@@ -29,7 +28,6 @@ export function getDataColumns(): BasicColumn[] {
       width: 150,
       sorter: true,
       ellipsis: true,
-      slots: { customRender: 'layout' },
     },
     {
       title: L('Layout'),

@@ -1,12 +1,6 @@
 <template>
   <div class="content">
     <BasicTable @register="registerTable">
-      <template #name="{ record }">
-        <Tag v-if="record.isStatic" style="margin-right: 5px" color="#8baac4">{{ L('Static') }}</Tag>
-        <Tag v-if="record.isDefault" style="margin-right: 5px" color="#108ee9">{{ L('DisplayName:IsDefault') }}</Tag>
-        <Tag v-if="record.isPublic" style="margin-right: 5px" color="#87d068">{{ L('Public') }}</Tag>
-        <span>{{ record.name }}</span>
-      </template>
       <template #toolbar>
         <a-button
           v-if="hasPermission('AbpIdentity.Roles.Create')"
@@ -15,43 +9,51 @@
           >{{ L('NewRole') }}</a-button
         >
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :stop-button-propagation="true"
-          :actions="[
-            {
-              auth: 'AbpIdentity.Roles.Update',
-              label: L('Edit'),
-              icon: 'ant-design:edit-outlined',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              auth: 'AbpIdentity.Roles.Delete',
-              color: 'error',
-              label: L('Delete'),
-              icon: 'ant-design:delete-outlined',
-              ifShow: !record.isStatic,
-              onClick: handleDelete.bind(null, record),
-            },
-          ]"
-          :dropDownActions="[
-            {
-              auth: 'AbpIdentity.Roles.ManagePermissions',
-              label: L('Permissions'),
-              onClick: showPermissionModal.bind(null, record.name),
-            },
-            {
-              auth: 'AbpIdentity.Users.ManageClaims',
-              label: L('Claim'),
-              onClick: handleShowClaims.bind(null, record),
-            },
-            {
-              auth: 'Platform.Menu.ManageRoles',
-              label: L('Menu:Manage'),
-              onClick: handleSetMenu.bind(null, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'name'">
+          <Tag v-if="record.isStatic" style="margin-right: 5px" color="#8baac4">{{ L('Static') }}</Tag>
+          <Tag v-if="record.isDefault" style="margin-right: 5px" color="#108ee9">{{ L('DisplayName:IsDefault') }}</Tag>
+          <Tag v-if="record.isPublic" style="margin-right: 5px" color="#87d068">{{ L('Public') }}</Tag>
+          <span>{{ record.name }}</span>
+        </template>
+        <template v-else-if="column.key === 'action'">
+          <TableAction
+            :stop-button-propagation="true"
+            :actions="[
+              {
+                auth: 'AbpIdentity.Roles.Update',
+                label: L('Edit'),
+                icon: 'ant-design:edit-outlined',
+                onClick: handleEdit.bind(null, record),
+              },
+              {
+                auth: 'AbpIdentity.Roles.Delete',
+                color: 'error',
+                label: L('Delete'),
+                icon: 'ant-design:delete-outlined',
+                ifShow: !record.isStatic,
+                onClick: handleDelete.bind(null, record),
+              },
+            ]"
+            :dropDownActions="[
+              {
+                auth: 'AbpIdentity.Roles.ManagePermissions',
+                label: L('Permissions'),
+                onClick: showPermissionModal.bind(null, record.name),
+              },
+              {
+                auth: 'AbpIdentity.Users.ManageClaims',
+                label: L('Claim'),
+                onClick: handleShowClaims.bind(null, record),
+              },
+              {
+                auth: 'Platform.Menu.ManageRoles',
+                label: L('Menu:Manage'),
+                onClick: handleSetMenu.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <RoleModal @register="registerModal" @change="reloadTable" />

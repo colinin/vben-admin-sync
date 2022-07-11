@@ -1,17 +1,19 @@
 <template>
   <BasicTable @register="registerTable">
-    <template #action="{ record }">
-      <TableAction
-        :actions="[
-          {
-            auth: 'AbpAuditing.SecurityLog.Delete',
-            color: 'error',
-            label: L('Delete'),
-            icon: 'ant-design:delete-outlined',
-            onClick: handleDelete.bind(null, record),
-          },
-        ]"
-      />
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'actions'">
+        <TableAction
+          :actions="[
+            {
+              auth: 'AbpAuditing.SecurityLog.Delete',
+              color: 'error',
+              label: L('Delete'),
+              icon: 'ant-design:delete-outlined',
+              onClick: handleDelete.bind(null, record),
+            },
+          ]"
+        />
+      </template>
     </template>
   </BasicTable>
 </template>
@@ -51,8 +53,7 @@
         actionColumn: {
           width: 120,
           title: L('Actions'),
-          dataIndex: 'action',
-          slots: { customRender: 'action' },
+          dataIndex: 'actions',
         },
       });
 

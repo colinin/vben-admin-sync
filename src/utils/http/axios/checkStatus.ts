@@ -122,7 +122,7 @@ export function checkResponse(response: any): string | undefined {
   // oauth错误信息
   if (response.data.error_description) {
     error(response.data.error_description);
-    return response.data.error_description;
+    return response.data;
   }
 
   // 其他错误

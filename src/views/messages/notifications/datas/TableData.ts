@@ -15,21 +15,21 @@ export function getDataColumns(): BasicColumn[] {
     {
       title: L('Notifications:Title'),
       dataIndex: ['data', 'extraProperties', 'title'],
+      key: 'title',
       align: 'left',
       width: 200,
       sorter: true,
       ellipsis: true,
-      slots: { customRender: 'title' },
       className: '',
     },
     {
       title: L('Notifications:Content'),
-      dataIndex: ['data', 'extraProperties','message'],
+      dataIndex: ['data', 'extraProperties', 'message'],
+      key: 'message',
       align: 'left',
       width: 300,
       sorter: true,
       ellipsis: true,
-      slots: { customRender: 'content' },
     },
     {
       title: L('Notifications:Type'),
@@ -38,7 +38,6 @@ export function getDataColumns(): BasicColumn[] {
       width: 180,
       sorter: true,
       ellipsis: true,
-      slots: { customRender: 'type' },
     },
     {
       title: L('Notifications:SendTime'),

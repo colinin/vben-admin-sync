@@ -1,23 +1,25 @@
 <template>
   <BasicTable @register="registerTable">
-    <template #action="{ record }">
-      <TableAction
-        :stop-button-propagation="true"
-        :actions="[
-          {
-            label: L('CopyLink'),
-            icon: 'ant-design:copy-outlined',
-            onClick: handleCopyLink.bind(null, record),
-          },
-          {
-            color: 'error',
-            label: L('Delete'),
-            icon: 'ant-design:delete-outlined',
-            ifShow: deleteEnabled,
-            onClick: handleDelete.bind(null, record),
-          },
-        ]"
-      />
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'action'">
+        <TableAction
+          :stop-button-propagation="true"
+          :actions="[
+            {
+              label: L('CopyLink'),
+              icon: 'ant-design:copy-outlined',
+              onClick: handleCopyLink.bind(null, record),
+            },
+            {
+              color: 'error',
+              label: L('Delete'),
+              icon: 'ant-design:delete-outlined',
+              ifShow: deleteEnabled,
+              onClick: handleDelete.bind(null, record),
+            },
+          ]"
+        />
+      </template>
     </template>
   </BasicTable>
 </template>
@@ -67,7 +69,6 @@
       width: 180,
       title: L('Actions'),
       dataIndex: 'action',
-      slots: { customRender: 'action' },
     },
   });
 

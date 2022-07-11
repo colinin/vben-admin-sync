@@ -9,72 +9,80 @@
           >{{ L('NewUser') }}</a-button
         >
       </template>
-      <template #name="{ record }">
-        <span>{{ record.userName }}</span>
-        <Tag v-if="!record.isActive" style="margin-left: 5px" color="orange">{{ L('UnActived') }}</Tag>
-      </template>
-      <template #phoneNumber="{ record }">
-        <span>{{ record.phoneNumber }}</span>
-        <Tag v-if="record.phoneNumberConfirmed" style="margin-left: 5px" color="green">{{ L('Confirmed') }}</Tag>
-        <Tag v-else color="orange" style="margin-left: 5px">{{ L('UnConfirmed') }}</Tag>
-      </template>
-      <template #email="{ record }">
-        <span>{{ record.email }}</span>
-        <Tag v-if="record.emailConfirmed" style="margin-left: 5px" color="green">{{ L('Confirmed') }}</Tag>
-        <Tag v-else color="orange" style="margin-left: 5px">{{ L('UnConfirmed') }}</Tag>
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              auth: 'AbpIdentity.Users.Update',
-              label: L('Edit'),
-              icon: 'ant-design:edit-outlined',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              auth: 'AbpIdentity.Users.Delete',
-              color: 'error',
-              label: L('Delete'),
-              icon: 'ant-design:delete-outlined',
-              onClick: handleDelete.bind(null, record),
-            },
-          ]"
-          :dropDownActions="[
-            {
-              auth: 'AbpIdentity.Users.Update',
-              label: L('Lockout'),
-              ifShow: lockEnable(record),
-              onClick: showLockModal.bind(null, record.id),
-            },
-            {
-              auth: 'AbpIdentity.Users.Update',
-              label: L('UnLock'),
-              ifShow: record.lockoutEnabled && !lockEnable(record),
-              onClick: handleUnlock.bind(null, record),
-            },
-            {
-              auth: 'AbpIdentity.Users.ManagePermissions',
-              label: L('Permissions'),
-              onClick: showPermissionModal.bind(null, record.id, record.userName),
-            },
-            {
-              auth: 'AbpIdentity.Users.ManageClaims',
-              label: L('Claim'),
-              onClick: handleShowClaims.bind(null, record),
-            },
-            {
-              auth: 'AbpIdentity.Users.Update',
-              label: L('SetPassword'),
-              onClick: showPasswordModal.bind(null, record.id),
-            },
-            {
-              auth: 'Platform.Menu.ManageUsers',
-              label: L('Menu:Manage'),
-              onClick: handleSetMenu.bind(null, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'userName'">
+          <span>{{ record.userName }}</span>
+          <Tag v-if="!lockEnable(record)" style="margin-left: 5px" color="orange">{{ L('Lockout') }}</Tag>
+          <Tag v-if="!record.isActive" style="margin-left: 5px" color="red">{{ L('UnActived') }}</Tag>
+        </template>
+        <template v-if="column.key === 'phoneNumber'">
+          <template v-if="record.phoneNumber">
+            <span style="margin-right: 5px">{{ record.phoneNumber }}</span>
+            <Tag v-if="record.phoneNumberConfirmed" color="green">{{ L('Confirmed') }}</Tag>
+            <Tag v-else color="orange">{{ L('UnConfirmed') }}</Tag>
+          </template>
+        </template>
+        <template v-if="column.key === 'email'">
+          <template v-if="record.email">
+            <span style="margin-right: 5px">{{ record.email }}</span>
+            <Tag v-if="record.emailConfirmed" color="green">{{ L('Confirmed') }}</Tag>
+            <Tag v-else color="orange">{{ L('UnConfirmed') }}</Tag>
+          </template>
+        </template>
+        <template v-else-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                auth: 'AbpIdentity.Users.Update',
+                label: L('Edit'),
+                icon: 'ant-design:edit-outlined',
+                onClick: handleEdit.bind(null, record),
+              },
+              {
+                auth: 'AbpIdentity.Users.Delete',
+                color: 'error',
+                label: L('Delete'),
+                icon: 'ant-design:delete-outlined',
+                onClick: handleDelete.bind(null, record),
+              },
+            ]"
+            :dropDownActions="[
+              {
+                auth: 'AbpIdentity.Users.Update',
+                label: L('Lockout'),
+                ifShow: lockEnable(record),
+                onClick: showLockModal.bind(null, record.id),
+              },
+              {
+                auth: 'AbpIdentity.Users.Update',
+                label: L('UnLock'),
+                ifShow: record.lockoutEnabled && !lockEnable(record),
+                onClick: handleUnlock.bind(null, record),
+              },
+              {
+                auth: 'AbpIdentity.Users.ManagePermissions',
+                label: L('Permissions'),
+                onClick: showPermissionModal.bind(null, record.id, record.userName),
+              },
+              {
+                auth: 'AbpIdentity.Users.ManageClaims',
+                label: L('Claim'),
+                onClick: handleShowClaims.bind(null, record),
+              },
+              {
+                auth: 'AbpIdentity.Users.Update',
+                label: L('SetPassword'),
+                ifShow: !record.isExternal, // 外部扩展用户不允许修改密码
+                onClick: showPasswordModal.bind(null, record.id),
+              },
+              {
+                auth: 'Platform.Menu.ManageUsers',
+                label: L('Menu:Manage'),
+                onClick: handleSetMenu.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <UserModal @register="registerModal" @change="reloadTable" />
@@ -134,11 +142,12 @@
     setup(_props, { emit }) {
       const { L } = useLocalization(['AbpIdentity', 'AppPlatform']);
       const loadMenuRef = ref(false);
+      const nullFormElRef = ref(null);
       const { hasPermission } = usePermission();
       const [registerModal, { openModal }] = useModal();
       const { lockEnable, registerTable, reloadTable, handleDelete } = useUserTable();
       const { registerLockModal, showLockModal, handleUnLock } = useLock({ emit });
-      const { registerPasswordModal, showPasswordModal } = usePassword();
+      const { registerPasswordModal, showPasswordModal } = usePassword(nullFormElRef);
       const [registerClaimModal, { openModal: openClaimModal }] = useModal();
       const [registerMenuModal, { openModal: openMenuModal, closeModal: closeMenuModal }] =
         useModal();

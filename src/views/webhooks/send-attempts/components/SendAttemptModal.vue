@@ -12,7 +12,11 @@
       :model="modelRef"
       layout="vertical"
     >
-      <Tabs v-model:activeKey="activeKey">
+      <Tabs
+        v-model:activeKey="activeKey"
+        :style="tabsStyle.style"
+        :tabBarStyle="tabsStyle.tabBarStyle"
+      >
         <TabPane key="basic" :tab="L('BasicInfo')">
           <FormItem :label="L('DisplayName:TenantId')">
             <Input readonly :value="getTenant" />
@@ -103,6 +107,7 @@
 
 <script lang="ts" setup>
   import { ref, unref, computed, watch } from 'vue';
+  import { useTabsStyle } from '/@/hooks/component/useStyles';
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { Checkbox, Form, Tabs, Tag, Input, InputPassword } from 'ant-design-vue';
   import { CodeEditorX, MODE } from '/@/components/CodeEditor';
@@ -122,6 +127,7 @@
   const formElRef = ref<any>();
   const activeKey = ref('basic');
   const tenantName = ref('');
+  const tabsStyle = useTabsStyle();
   const modelRef = ref<WebhookSendAttempt>(getDefaultModel());
   const subscriptionRef = ref<WebhookSubscription>(getDefaultSubscription());
   const [registerModal] = useModalInner((model) => {

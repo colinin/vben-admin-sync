@@ -1,23 +1,25 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #inline="{ record }">
-        <Switch readonly :checked="record.isInlineLocalized" />
-      </template>
-      <template #layout="{ record }">
-        <Switch readonly :checked="record.isLayout" />
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :stop-button-propagation="true"
-          :actions="[
-            {
-              label: L('EditContents'),
-              icon: 'ant-design:edit-outlined',
-              onClick: handleEditContent.bind(null, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'isInlineLocalized'">
+          <Switch readonly :checked="record.isInlineLocalized" />
+        </template>
+        <template v-else-if="column.key === 'isLayout'">
+          <Switch readonly :checked="record.isLayout" />
+        </template>
+        <template v-else-if="column.key === 'action'">
+          <TableAction
+            :stop-button-propagation="true"
+            :actions="[
+              {
+                label: L('EditContents'),
+                icon: 'ant-design:edit-outlined',
+                onClick: handleEditContent.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <TemplateContentModal @register="registerModal" />
@@ -56,7 +58,6 @@
       width: 150,
       title: L('Actions'),
       dataIndex: 'action',
-      slots: { customRender: 'action' },
     },
   });
 

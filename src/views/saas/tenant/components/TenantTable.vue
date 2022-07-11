@@ -1,10 +1,6 @@
 <template>
   <div>
     <BasicTable ref="tableElRef" @register="registerTable">
-      <template #name="{ record }">
-        <span>{{ record.name }}</span>
-        <Tag v-if="!record.isActive" style="margin-left: 5px" color="orange">{{ L('UnActived') }}</Tag>
-      </template>
       <template #toolbar>
         <a-button
           v-if="hasPermission('AbpSaas.Tenants.Create')"
@@ -19,36 +15,42 @@
           >{{ L('ManageHostFeatures') }}</a-button
         >
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              auth: 'AbpSaas.Tenants.Update',
-              label: L('Edit'),
-              icon: 'ant-design:edit-outlined',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              auth: 'AbpSaas.Tenants.Delete',
-              color: 'error',
-              label: L('Delete'),
-              icon: 'ant-design:delete-outlined',
-              onClick: handleDelete.bind(null, record),
-            },
-          ]"
-          :dropDownActions="[
-            {
-              auth: 'AbpSaas.Tenants.ManageFeatures',
-              label: L('ManageFeatures'),
-              onClick: handleManageTenantFeature.bind(null, record),
-            },
-            {
-              auth: 'AbpSaas.Tenants.ManageConnectionStrings',
-              label: L('ConnectionStrings'),
-              onClick: openConnectModal.bind(null, true, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'name'">
+          <span>{{ record.name }}</span>
+          <Tag v-if="!record.isActive" style="margin-left: 5px" color="orange">{{ L('UnActived') }}</Tag>
+        </template>
+        <template v-else-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                auth: 'AbpSaas.Tenants.Update',
+                label: L('Edit'),
+                icon: 'ant-design:edit-outlined',
+                onClick: handleEdit.bind(null, record),
+              },
+              {
+                auth: 'AbpSaas.Tenants.Delete',
+                color: 'error',
+                label: L('Delete'),
+                icon: 'ant-design:delete-outlined',
+                onClick: handleDelete.bind(null, record),
+              },
+            ]"
+            :dropDownActions="[
+              {
+                auth: 'AbpSaas.Tenants.ManageFeatures',
+                label: L('ManageFeatures'),
+                onClick: handleManageTenantFeature.bind(null, record),
+              },
+              {
+                auth: 'AbpSaas.Tenants.ManageConnectionStrings',
+                label: L('ConnectionStrings'),
+                onClick: openConnectModal.bind(null, true, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <FeatureModal @register="registerFeatureModal" />

@@ -17,9 +17,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 'auto',
       sorter: true,
-      slots: {
-        customRender: 'name',
-      },
     },
   ];
 }

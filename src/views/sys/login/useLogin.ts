@@ -12,6 +12,7 @@ export enum LoginStateEnum {
   MOBILE_REGISTER,
   WECHAT,
   SSO,
+  TwoFactor,
 }
 
 const currentState = ref(LoginStateEnum.LOGIN);

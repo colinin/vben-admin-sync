@@ -27,9 +27,6 @@ export function getDataColumns(): BasicColumn[] {
       width: 300,
       sorter: true,
       fixed: 'left',
-      slots: {
-        customRender: 'name',
-      }
     },
     {
       title: L('DisplayName:IsActive'),
@@ -37,9 +34,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 180,
       sorter: true,
-      slots: {
-        customRender: 'active',
-      }
     },
     {
       title: L('DisplayName:CreationTime'),
@@ -57,9 +51,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 200,
       sorter: true,
-      slots: {
-        customRender: 'webhooks',
-      },
     },
   ];
 }

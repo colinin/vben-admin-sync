@@ -9,36 +9,38 @@
           >{{ L('IdentityClaim:New') }}</a-button
         >
       </template>
-      <template #types="{ record }">
-        <span>{{ valueTypeMap[record.valueType] }}</span>
-      </template>
-      <template #required="{ record }">
-        <Switch :checked="record.required" disabled />
-      </template>
-      <template #static="{ record }">
-        <Switch :checked="record.isStatic" disabled />
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :stop-button-propagation="true"
-          :actions="[
-            {
-              auth: 'AbpIdentity.IdentityClaimTypes.Update',
-              label: L('Edit'),
-              icon: 'ant-design:edit-outlined',
-              ifShow: !record.isStatic,
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              auth: 'AbpIdentity.IdentityClaimTypes.Delete',
-              color: 'error',
-              label: L('Delete'),
-              icon: 'ant-design:delete-outlined',
-              ifShow: !record.isStatic,
-              onClick: handleDelete.bind(null, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'valueType'">
+          <span>{{ valueTypeMap[record.valueType] }}</span>
+        </template>
+        <template v-else-if="column.key === 'required'">
+          <Switch :checked="record.required" readonly />
+        </template>
+        <template v-else-if="column.key === 'isStatic'">
+          <Switch :checked="record.isStatic" readonly />
+        </template>
+        <template v-else-if="column.key === 'action'">
+          <TableAction
+            :stop-button-propagation="true"
+            :actions="[
+              {
+                auth: 'AbpIdentity.IdentityClaimTypes.Update',
+                label: L('Edit'),
+                icon: 'ant-design:edit-outlined',
+                ifShow: !record.isStatic,
+                onClick: handleEdit.bind(null, record),
+              },
+              {
+                auth: 'AbpIdentity.IdentityClaimTypes.Delete',
+                color: 'error',
+                label: L('Delete'),
+                icon: 'ant-design:delete-outlined',
+                ifShow: !record.isStatic,
+                onClick: handleDelete.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <ClaimModal @register="registerModal" @change="reloadTable" />

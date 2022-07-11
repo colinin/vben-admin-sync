@@ -16,7 +16,11 @@
       :model="modelRef"
       :rules="modelRules"
     >
-      <Tabs v-model:activeKey="activeKey">
+      <Tabs
+        v-model:activeKey="activeKey"
+        :style="tabsStyle.style"
+        :tabBarStyle="tabsStyle.tabBarStyle"
+      >
         <TabPane key="basic" :tab="L('BasicInfo')">
           <FormItem
             name="isEnabled"
@@ -131,52 +135,24 @@
           </FormItem>
         </TabPane>
         <TabPane key="paramters" :tab="L('Paramters')">
-          <BasicTable @register="registerTable" :data-source="jobArgs">
-            <template #toolbar>
-              <Button type="primary" @click="handleAddNewArg"
-                >{{ L('BackgroundJobs:AddNewArg') }}
-              </Button>
-            </template>
-            <template #action="{ record }">
-              <TableAction
-                :stop-button-propagation="true"
-                :actions="[
-                  {
-                    label: L('Edit'),
-                    icon: 'ant-design:edit-outlined',
-                    onClick: handleEditParam.bind(null, record),
-                  },
-                  {
-                    color: 'error',
-                    label: L('Delete'),
-                    icon: 'ant-design:delete-outlined',
-                    onClick: handleDeleteParam.bind(null, record),
-                  },
-                ]"
-              />
-            </template>
-          </BasicTable>
+          <JobParamter :isEditModal="isEditModal" :args="modelRef.args" @args-reset="handleArgsChange" />
+        </TabPane>
+        <TabPane v-if="isEditModal" key="actions" :tab="L('Job:Actions')">
+          <JobAction :jobId="modelRef.id" />
         </TabPane>
       </Tabs>
     </Form>
-    <BasicModal
-      :title="L('BackgroundJobs:Paramter')"
-      @register="registerParamModal"
-      @ok="handleSaveParam"
-    >
-      <BasicForm @register="registerParamForm" />
-    </BasicModal>
   </BasicModal>
 </template>
 
 <script lang="ts" setup>
   import dayjs from 'dayjs';
-  import { computed, ref, reactive, unref, nextTick } from 'vue';
+  import { computed, ref, reactive, unref } from 'vue';
+  import { useTabsStyle } from '/@/hooks/component/useStyles';
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { useValidation } from '/@/hooks/abp/useValidation';
   import { useMessage } from '/@/hooks/web/useMessage';
   import {
-    Button,
     Checkbox,
     DatePicker,
     Form,
@@ -185,9 +161,7 @@
     Input,
     InputNumber,
   } from 'ant-design-vue';
-  import { BasicForm, useForm } from '/@/components/Form';
-  import { BasicModal, useModal, useModalInner } from '/@/components/Modal';
-  import { BasicTable, BasicColumn, TableAction, useTable } from '/@/components/Table';
+  import { BasicModal, useModalInner } from '/@/components/Modal';
   import { getById, create, update } from '/@/api/task-management/backgroundJobInfo';
   import {
     JobType,
@@ -197,97 +171,22 @@
   } from '/@/api/task-management/model/backgroundJobInfoModel';
   import { JobTypeMap, JobPriorityMap } from '../datas/typing';
   import { formatToDate } from '/@/utils/dateUtil';
+  import JobAction from './JobAction.vue';
+  import JobParamter from './JobParamter.vue';
 
   const FormItem = Form.Item;
   const TabPane = Tabs.TabPane;
   const TextArea = Input.TextArea;
 
   const emit = defineEmits(['change', 'register']);
-  const { L } = useLocalization('TaskManagement');
+  const { L } = useLocalization(['TaskManagement', 'AbpUi']);
+  const modelRef = ref<BackgroundJobInfo>(getDefaultModel());
   const { ruleCreator } = useValidation();
   const { createMessage } = useMessage();
   const copyJob = ref(false);
   const formElRef = ref<any>();
   const activeKey = ref('basic');
-  const modelRef = ref<BackgroundJobInfo>({
-    id: '',
-    isEnabled: true,
-    priority: JobPriority.Normal,
-    jobType: JobType.Once,
-    source: JobSource.User,
-    maxCount: 0,
-    maxTryCount: 0,
-    args: {},
-  } as BackgroundJobInfo);
-  const [registerModal, { closeModal, changeOkLoading }] = useModalInner((model) => {
-    activeKey.value = 'basic';
-    copyJob.value = model.copy ?? false;
-    fetchModel(model.id);
-  });
-  const [registerParamModal, { openModal: openParamModal, closeModal: closeParamModal }] =
-    useModal();
-  const [
-    registerParamForm,
-    { resetFields: resetParamFields, setFieldsValue: setParamFields, validate },
-  ] = useForm({
-    labelAlign: 'left',
-    labelWidth: 120,
-    schemas: [
-      {
-        field: 'oldKey',
-        component: 'Input',
-        label: 'oldKey',
-        show: false,
-        colProps: { span: 24 },
-      },
-      {
-        field: 'key',
-        component: 'Input',
-        label: L('DisplayName:Key'),
-        required: true,
-        colProps: { span: 24 },
-        componentProps: {
-          autocomplete: 'off',
-        },
-      },
-      {
-        field: 'value',
-        component: 'InputTextArea',
-        label: L('DisplayName:Value'),
-        required: true,
-        colProps: { span: 24 },
-      },
-    ],
-    showActionButtonGroup: false,
-  });
-  const columns: BasicColumn[] = [
-    {
-      title: L('DisplayName:Key'),
-      dataIndex: 'key',
-      align: 'left',
-      width: 200,
-      sorter: true,
-    },
-    {
-      title: L('DisplayName:Value'),
-      dataIndex: 'value',
-      align: 'left',
-      width: 300,
-      sorter: true,
-    },
-  ];
-  const [registerTable] = useTable({
-    rowKey: 'key',
-    columns: columns,
-    pagination: false,
-    maxHeight: 300,
-    actionColumn: {
-      width: 180,
-      title: L('Actions'),
-      dataIndex: 'action',
-      slots: { customRender: 'action' },
-    },
-  });
+  const tabsStyle = useTabsStyle();
   const isEditModal = computed(() => {
     if (modelRef.value.id) {
       return true;
@@ -308,6 +207,15 @@
       return L('Description:IsAbandoned');
     }
     return '';
+  });
+  const getDate = computed(() => {
+    return (field: string) => {
+      const model = unref(modelRef);
+      if (model[field]) {
+        return dayjs(model[field], 'YYYY-MM-DD');
+      }
+      return undefined;
+    };
   });
   const modelRules = reactive({
     group: ruleCreator.fieldRequired({
@@ -344,29 +252,15 @@
     { label: JobPriorityMap[JobPriority.AboveNormal], value: JobPriority.AboveNormal },
     { label: JobPriorityMap[JobPriority.High], value: JobPriority.High },
   ]);
-  const jobArgs = computed(() => {
-    const model = unref(modelRef);
-    if (!model.args) return [];
-    return Object.keys(model.args).map((key) => {
-      return {
-        key: key,
-        value: model.args[key],
-      };
-    });
-  });
-  const getDate = computed(() => {
-    return (field: string) => {
-      const model = unref(modelRef);
-      if (model[field]) {
-        return dayjs(model[field], 'YYYY-MM-DD');
-      }
-      return undefined;
-    };
+  const [registerModal, { closeModal, changeOkLoading }] = useModalInner((model) => {
+    activeKey.value = 'basic';
+    copyJob.value = model.copy ?? false;
+    fetchModel(model.id);
   });
 
   function fetchModel(id: string) {
     if (!id) {
-      resetFields();
+      modelRef.value = getDefaultModel();
       return;
     }
     getById(id).then((res) => {
@@ -376,21 +270,6 @@
         res.source = JobSource.User;
       }
       modelRef.value = res;
-    });
-  }
-
-  function resetFields() {
-    nextTick(() => {
-      modelRef.value = {
-        id: '',
-        isEnabled: true,
-        priority: JobPriority.Normal,
-        jobType: JobType.Once,
-        source: JobSource.User,
-        maxCount: 0,
-        maxTryCount: 0,
-        args: {},
-      } as BackgroundJobInfo;
     });
   }
 
@@ -405,8 +284,8 @@
       changeOkLoading(true);
       const model = unref(modelRef);
       const api = isEditModal.value
-        ? update(model.id, Object.assign(model))
-        : create(Object.assign(model));
+        ? update(model.id, model)
+        : create(model);
       api
         .then(() => {
           createMessage.success(L('Successful'));
@@ -420,37 +299,22 @@
     });
   }
 
-  function handleAddNewArg() {
-    openParamModal(true);
-    nextTick(() => {
-      resetParamFields();
-    });
-  }
-
-  function handleSaveParam() {
-    validate().then((input) => {
-      console.log(input);
-      const model = unref(modelRef);
-      model.args ??= {};
-      if (input.oldKey && input.key !== input.oldKey) {
-        delete model.args[input.oldKey];
-      }
-      model.args[input.key] = input.value;
-      resetParamFields();
-      closeParamModal();
-    });
-  }
-
-  function handleEditParam(record) {
-    openParamModal(true);
-    nextTick(() => {
-      setParamFields(Object.assign({ oldKey: record.key }, record));
-    });
-  }
-
-  function handleDeleteParam(record) {
+  function handleArgsChange(args: ExtraPropertyDictionary) {
     const model = unref(modelRef);
-    model.args ??= {};
-    delete model.args[record.key];
+    model.args = args;
   }
+
+  function getDefaultModel() {
+    return {
+      id: '',
+      isEnabled: true,
+      priority: JobPriority.Normal,
+      jobType: JobType.Once,
+      source: JobSource.User,
+      maxCount: 0,
+      maxTryCount: 0,
+      args: {},
+    } as BackgroundJobInfo;
+  }
+
 </script>

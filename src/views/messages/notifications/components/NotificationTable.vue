@@ -7,27 +7,9 @@
       type: 'checkbox',
       selectedRowKeys: selectedRowKeys,
       onChange: handleSelectRowChanged,
-    }">
-    <template #title="{ record }">
-      <Icon
-        v-if="record.state === NotificationReadState.Read"
-        class="title-icon"
-        icon="ic:outline-mark-email-read"
-        :size="20"
-        color="#00DD00"
-      />
-      <Icon v-else class="title-icon" icon="ic:outline-mark-email-unread" :size="20" color="#FF7744" />
-      <a href="javascript:(0);" @click="handleExpanded(record)">{{ getTitle(record) }}</a>
-    </template>
-    <template #content="{ record }">
-      <a href="javascript:(0);" @click="handleExpanded(record)">{{ getContent(record) }}</a>
-    </template>
-    <template #type="{ record }">
-      <span>{{ getType(record) }}</span>
-    </template>
-    <template #expandedRowRender="{ record }">
-      <MarkdownViewer :value="getContent(record)" />
-    </template>
+    }"
+    @fetch-success="handleChanged"
+  >
     <template #toolbar>
       <Dropdown v-if="selectedRowKeys.length > 0">
         <template #overlay>
@@ -49,42 +31,64 @@
         </Button>
       </Dropdown>
     </template>
-    <template #action="{ record }">
-      <TableAction
-        :stop-button-propagation="true"
-        :actions="[
-          {
-            color: 'error',
-            label: L('Delete'),
-            icon: 'ant-design:delete-outlined',
-            onClick: handleDelete.bind(null, record),
-          },
-        ]"
-        :drop-down-actions="[
-          {
-            label: L('MarkAs'),
-          }
-        ]"
-      >
-        <template #more>
-          <Dropdown>
-            <template #overlay>
-              <Menu @click="(e) => handleMarkSingleState(e, record)">
-                <MenuItem key="read">
-                  {{ L('Read') }}
-                </MenuItem>
-                <MenuItem key="un-read">
-                  {{ L('UnRead') }}
-                </MenuItem>
-              </Menu>
-            </template>
-            <Button type="link" size="small">
-              {{ L('MarkAs') }}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
-        </template>
-      </TableAction>
+    <template #expandedRowRender="{ record }">
+      <MarkdownViewer :value="getContent(record)" />
+    </template>
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'title'">
+        <Icon
+          v-if="record.state === NotificationReadState.Read"
+          class="title-icon"
+          icon="ic:outline-mark-email-read"
+          :size="20"
+          color="#00DD00"
+        />
+        <Icon v-else class="title-icon" icon="ic:outline-mark-email-unread" :size="20" color="#FF7744" />
+        <a href="javascript:(0);" @click="handleExpanded(record)">{{ getTitle(record) }}</a>
+      </template>
+      <template v-else-if="column.key === 'message'">
+        <a href="javascript:(0);" @click="handleExpanded(record)">{{ getContent(record) }}</a>
+      </template>
+      <template v-else-if="column.key === 'type'">
+        <span>{{ getType(record) }}</span>
+      </template>
+      <template v-else-if="column.key === 'action'">
+        <TableAction
+          :stop-button-propagation="true"
+          :actions="[
+            {
+              color: 'error',
+              label: L('Delete'),
+              icon: 'ant-design:delete-outlined',
+              onClick: handleDelete.bind(null, record),
+            },
+          ]"
+          :drop-down-actions="[
+            {
+              label: L('MarkAs'),
+            }
+          ]"
+        >
+          <template #more>
+            <Dropdown>
+              <template #overlay>
+                <Menu @click="(e) => handleMarkSingleState(e, record)">
+                  <MenuItem key="read">
+                    {{ L('Read') }}
+                  </MenuItem>
+                  <MenuItem key="un-read">
+                    {{ L('UnRead') }}
+                  </MenuItem>
+                </Menu>
+              </template>
+              <Button type="link" size="small">
+                {{ L('MarkAs') }}
+                <DownOutlined />
+              </Button>
+            </Dropdown>
+          </template>
+        </TableAction>
+      </template>
     </template>
   </BasicTable>
 </template>
@@ -109,7 +113,7 @@
   // 此模块需要所有的本地化资源
   const { L } = useLocalization();
 
-  const [registerTable, { reload }] = useTable({
+  const [registerTable, { reload, clearSelectedRowKeys }] = useTable({
     rowKey: 'id',
     title: L('Notifications'),
     columns: getDataColumns(),
@@ -128,16 +132,15 @@
       width: 150,
       title: L('Actions'),
       dataIndex: 'action',
-      slots: { customRender: 'action' },
     },
   });
   const { createConfirm, createMessage } = useMessage();
   const expandedRowKeys = ref<string[]>([]);
   const selectedRowKeys = ref<string[]>([]);
   const typeTitleMap = reactive({
-    [NotificationType.System]: L('NotificationType:System'),
-    [NotificationType.Application]: L('NotificationType:Application'),
-    [NotificationType.User]: L('NotificationType:User'),
+    [NotificationType.System]: L('Notifications:System'),
+    [NotificationType.Application]: L('Notifications:Application'),
+    [NotificationType.User]: L('Notifications:User'),
   });
   const getTitle = computed(() => {
     return (notifier) => {
@@ -220,7 +223,15 @@
       expandedRowKeys.value.splice(index, 1);
     } else {
       expandedRowKeys.value.push(record.id);
+      if (record.state == NotificationReadState.UnRead) {
+        record.state = NotificationReadState.Read;
+        markReadState([record.id], record.state);
+      }
     }
+  }
+
+  function handleChanged() {
+    clearSelectedRowKeys();
   }
 </script>
 

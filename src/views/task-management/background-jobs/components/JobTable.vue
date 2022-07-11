@@ -23,73 +23,75 @@
           >{{ L('BackgroundJobs:AddNew') }}</a-button
         >
       </template>
-      <template #enable="{ record }">
-        <Switch :checked="record.isEnabled" disabled />
-      </template>
-      <template #name="{ record }">
-        <a href="javascript:(0);" @click="handleDetail(record)">{{ record.name }}</a>
-      </template>
-      <template #status="{ record }">
-        <Tooltip v-if="record.isAbandoned" color="orange" :title="L('Description:IsAbandoned')">
-          <Tag :color="JobStatusColor[record.status]">{{ JobStatusMap[record.status] }}</Tag>
-        </Tooltip>
-        <Tag v-else :color="JobStatusColor[record.status]">{{ JobStatusMap[record.status] }}</Tag>
-      </template>
-      <template #type="{ record }">
-        <Tag color="blue">{{ JobTypeMap[record.jobType] }}</Tag>
-      </template>
-      <template #priority="{ record }">
-        <Tag :color="JobPriorityColor[record.priority]">{{ JobPriorityMap[record.priority] }}</Tag>
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :stop-button-propagation="true"
-          :actions="[
-            {
-              auth: 'TaskManagement.BackgroundJobs.Update',
-              label: L('Edit'),
-              icon: 'ant-design:edit-outlined',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              auth: 'TaskManagement.BackgroundJobs.Delete',
-              color: 'error',
-              label: L('Delete'),
-              icon: 'ant-design:delete-outlined',
-              onClick: handleDelete.bind(null, record),
-            },
-          ]"
-          :dropDownActions="[
-            {
-              auth: 'TaskManagement.BackgroundJobs.Pause',
-              label: L('BackgroundJobs:Pause'),
-              ifShow: [JobStatus.Running, JobStatus.FailedRetry].includes(record.status),
-              onClick: handlePause.bind(null, record),
-            },
-            {
-              auth: 'TaskManagement.BackgroundJobs.Resume',
-              label: L('BackgroundJobs:Resume'),
-              ifShow: [JobStatus.Paused, JobStatus.Stopped].includes(record.status),
-              onClick: handleResume.bind(null, record),
-            },
-            {
-              auth: 'TaskManagement.BackgroundJobs.Trigger',
-              label: L('BackgroundJobs:Trigger'),
-              ifShow: [JobStatus.Running, JobStatus.Completed, JobStatus.FailedRetry].includes(
-                record.status,
-              ),
-              onClick: handleTrigger.bind(null, record),
-            },
-            {
-              auth: 'TaskManagement.BackgroundJobs.Create',
-              label: L('BackgroundJobs:Copy'),
-              onClick: handleCopy.bind(null, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'isEnabled'">
+          <Switch :checked="record.isEnabled" readonly />
+        </template>
+        <template v-else-if="column.key === 'name'">
+          <a href="javascript:(0);" @click="handleDetail(record)">{{ record.name }}</a>
+        </template>
+        <template v-else-if="column.key === 'status'">
+          <Tooltip v-if="record.isAbandoned" color="orange" :title="L('Description:IsAbandoned')">
+            <Tag :color="JobStatusColor[record.status]">{{ JobStatusMap[record.status] }}</Tag>
+          </Tooltip>
+          <Tag v-else :color="JobStatusColor[record.status]">{{ JobStatusMap[record.status] }}</Tag>
+        </template>
+        <template v-else-if="column.key === 'jobType'">
+          <Tag color="blue">{{ JobTypeMap[record.jobType] }}</Tag>
+        </template>
+        <template v-else-if="column.key === 'priority'">
+          <Tag :color="JobPriorityColor[record.priority]">{{ JobPriorityMap[record.priority] }}</Tag>
+        </template>
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :stop-button-propagation="true"
+            :actions="[
+              {
+                auth: 'TaskManagement.BackgroundJobs.Update',
+                label: L('Edit'),
+                icon: 'ant-design:edit-outlined',
+                onClick: handleEdit.bind(null, record),
+              },
+              {
+                auth: 'TaskManagement.BackgroundJobs.Delete',
+                color: 'error',
+                label: L('Delete'),
+                icon: 'ant-design:delete-outlined',
+                onClick: handleDelete.bind(null, record),
+              },
+            ]"
+            :dropDownActions="[
+              {
+                auth: 'TaskManagement.BackgroundJobs.Pause',
+                label: L('BackgroundJobs:Pause'),
+                ifShow: [JobStatus.Running, JobStatus.FailedRetry].includes(record.status),
+                onClick: handlePause.bind(null, record),
+              },
+              {
+                auth: 'TaskManagement.BackgroundJobs.Resume',
+                label: L('BackgroundJobs:Resume'),
+                ifShow: [JobStatus.Paused, JobStatus.Stopped].includes(record.status),
+                onClick: handleResume.bind(null, record),
+              },
+              {
+                auth: 'TaskManagement.BackgroundJobs.Trigger',
+                label: L('BackgroundJobs:Trigger'),
+                ifShow: [JobStatus.Running, JobStatus.Completed, JobStatus.FailedRetry].includes(
+                  record.status,
+                ),
+                onClick: handleTrigger.bind(null, record),
+              },
+              {
+                auth: 'TaskManagement.BackgroundJobs.Create',
+                label: L('BackgroundJobs:Copy'),
+                onClick: handleCopy.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
-    <BackgroundJobInfoModal @change="handleChange" @register="registerModal" />
+    <JobModal @change="handleChange" @register="registerModal" />
   </div>
 </template>
 
@@ -121,10 +123,10 @@
     JobPriorityMap,
     JobPriorityColor,
   } from '../datas/typing';
-  import BackgroundJobInfoModal from './BackgroundJobInfoModal.vue';
+  import JobModal from './JobModal.vue';
 
   const go = useGo();
-  const { L } = useLocalization('TaskManagement');
+  const { L } = useLocalization(['TaskManagement', 'AbpUi']);
   const { hasPermission } = usePermission();
   const [registerModal, { openModal }] = useModal();
   const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -151,7 +153,6 @@
       width: 220,
       title: L('Actions'),
       dataIndex: 'action',
-      slots: { customRender: 'action' },
     },
   });
   const selectedRowKeys = ref<string[]>([]);

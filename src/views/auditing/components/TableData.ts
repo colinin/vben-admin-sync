@@ -19,9 +19,6 @@ export function getDataColumns(): BasicColumn[] {
       key: 'url',
       width: 500,
       sorter: true,
-      slots: {
-        customRender: 'request',
-      },
     },
     {
       title: L('UserName'),

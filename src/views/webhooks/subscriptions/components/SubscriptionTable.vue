@@ -9,31 +9,33 @@
           >{{ L('Subscriptions:AddNew') }}</a-button
         >
       </template>
-      <template #active="{ record }">
-        <Switch :checked="record.isActive" disabled />
-      </template>
-      <template #webhooks="{ record }">
-        <Tag v-for="hook in record.webhooks" color="blue">{{ hook }}</Tag>
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :stop-button-propagation="true"
-          :actions="[
-            {
-              auth: 'AbpWebhooks.Subscriptions.Update',
-              label: L('Edit'),
-              icon: 'ant-design:edit-outlined',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              auth: 'AbpWebhooks.Subscriptions.Delete',
-              color: 'error',
-              label: L('Delete'),
-              icon: 'ant-design:delete-outlined',
-              onClick: handleDelete.bind(null, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'isActive'">
+          <Switch :checked="record.isActive" readonly />
+        </template>
+        <template v-else-if="column.key === 'webhooks'">
+          <Tag v-for="hook in record.webhooks" color="blue">{{ hook }}</Tag>
+        </template>
+        <template v-else-if="column.key === 'action'">
+          <TableAction
+            :stop-button-propagation="true"
+            :actions="[
+              {
+                auth: 'AbpWebhooks.Subscriptions.Update',
+                label: L('Edit'),
+                icon: 'ant-design:edit-outlined',
+                onClick: handleEdit.bind(null, record),
+              },
+              {
+                auth: 'AbpWebhooks.Subscriptions.Delete',
+                color: 'error',
+                label: L('Delete'),
+                icon: 'ant-design:delete-outlined',
+                onClick: handleDelete.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <SubscriptionModal @register="registerModal" @change="reload" />
@@ -53,7 +55,7 @@
   import SubscriptionModal from './SubscriptionModal.vue';
 
   const { createConfirm } = useMessage();
-  const { L } = useLocalization('WebhooksManagement');
+  const { L } = useLocalization(['WebhooksManagement', 'AbpUi']);
   const [registerModal, { openModal }] = useModal();
   const [registerTable, { reload }] = useTable({
     rowKey: 'id',
@@ -75,7 +77,6 @@
       width: 220,
       title: L('Actions'),
       dataIndex: 'action',
-      slots: { customRender: 'action' },
     },
   });
 

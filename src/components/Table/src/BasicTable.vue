@@ -412,9 +412,9 @@
       width: 100%;
       overflow-x: hidden;
 
-      .ant-table-body {
-        overflow: auto !important;
-      }
+      // .ant-table-body {
+      //   overflow: auto !important; // 注释解决列头宽度不一致问题
+      // }
 
       &-title {
         display: flex;

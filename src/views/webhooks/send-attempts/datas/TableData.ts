@@ -26,9 +26,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 180,
       sorter: true,
-      slots: {
-        customRender: 'code',
-      }
     },
     {
       title: L('DisplayName:CreationTime'),

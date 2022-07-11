@@ -1,29 +1,31 @@
 <template>
   <BasicTable @register="registerTable">
-    <template #allow="{ record }">
-      <Switch :checked="record.allowBeNull" disabled />
-    </template>
-    <template #action="{ record }">
-      <TableAction
-        :actions="[
-          {
-            auth: 'Platform.DataDictionary.Update',
-            label: L('Edit'),
-            icon: 'ant-design:edit-outlined',
-            onClick: handleEdit.bind(null, record),
-          },
-          {
-            auth: 'Platform.DataDictionary.ManageItems',
-            color: 'error',
-            label: L('Delete'),
-            icon: 'ant-design:delete-outlined',
-            onClick: handleDelete.bind(null, record),
-          },
-        ]"
-      />
-    </template>
     <template #toolbar>
       <a-button v-if="isEnableNew" type="primary" @click="handleAppendItem">{{ L('Data:AppendItem') }}</a-button>
+    </template>
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'allowBeNull'">
+        <Switch :checked="record.allowBeNull" readonly />
+      </template>
+      <template v-else-if="column.key === 'action'">
+        <TableAction
+          :actions="[
+            {
+              auth: 'Platform.DataDictionary.Update',
+              label: L('Edit'),
+              icon: 'ant-design:edit-outlined',
+              onClick: handleEdit.bind(null, record),
+            },
+            {
+              auth: 'Platform.DataDictionary.ManageItems',
+              color: 'error',
+              label: L('Delete'),
+              icon: 'ant-design:delete-outlined',
+              onClick: handleDelete.bind(null, record),
+            },
+          ]"
+        />
+      </template>
     </template>
   </BasicTable>
   <DataItemModal @register="registerModal" @change="fetchItems" />
@@ -74,7 +76,6 @@
           width: 160,
           title: L('Actions'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
       const [registerModal, { openModal }] = useModal();

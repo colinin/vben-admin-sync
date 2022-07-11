@@ -16,32 +16,34 @@
           @click="handleBulkDelete"
           >{{ L('Objects:BulkDelete') }}</Button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :stop-button-propagation="true"
-          :actions="[
-            {
-              color: 'success',
-              label: L('Objects:Preview'),
-              icon: 'ant-design:search-outlined',
-              onClick: handlePreview.bind(null, record),
-            },
-            {
-              auth: 'AbpOssManagement.OssObject.Delete',
-              color: 'error',
-              label: L('Delete'),
-              icon: 'ant-design:delete-outlined',
-              onClick: handleDelete.bind(null, record),
-            },
-            {
-              auth: 'AbpOssManagement.OssObject.Download',
-              ifShow: !record.isFolder,
-              label: L('Objects:Download'),
-              icon: 'ant-design:download-outlined',
-              onClick: handleDownload.bind(null, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :stop-button-propagation="true"
+            :actions="[
+              {
+                color: 'success',
+                label: L('Objects:Preview'),
+                icon: 'ant-design:search-outlined',
+                onClick: handlePreview.bind(null, record),
+              },
+              {
+                auth: 'AbpOssManagement.OssObject.Delete',
+                color: 'error',
+                label: L('Delete'),
+                icon: 'ant-design:delete-outlined',
+                onClick: handleDelete.bind(null, record),
+              },
+              {
+                auth: 'AbpOssManagement.OssObject.Download',
+                ifShow: !record.isFolder,
+                label: L('Objects:Download'),
+                icon: 'ant-design:download-outlined',
+                onClick: handleDownload.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <OssUploadModal @register="registerUploadModal" />
@@ -78,7 +80,7 @@
   const { L } = useLocalization(['AbpOssManagement', 'AbpUi']);
   const [registerUploadModal, { openModal: openUploadModal }] = useModal();
   const [registerPreviewModal, { openModal: openPreviewModal }] = useModal();
-  const [registerTable, { reload, getSelectRowKeys, setTableData }] = useTable({
+  const [registerTable, { reload, getSelectRowKeys, setTableData, setPagination }] = useTable({
     rowKey: 'name',
     title: L('DisplayName:OssObject'),
     columns: getDataColumns(),
@@ -110,7 +112,6 @@
       width: 240,
       title: L('Actions'),
       dataIndex: 'action',
-      slots: { customRender: 'action' },
     },
   });
   const selectCount = computed(() => {
@@ -121,10 +122,20 @@
     () => props.path,
     (path) => {
       if (!path) {
-        nextTick(() => setTableData([]));
+        nextTick(() => {
+          setTableData([]);
+          setPagination({
+            current: 1,
+          });
+        });
         return;
       }
-      nextTick(reload);
+      nextTick(() => {
+        setPagination({
+          current: 1,
+        });
+        reload();
+      });
     },
     {
       immediate: true,

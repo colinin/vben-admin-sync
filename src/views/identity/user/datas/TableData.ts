@@ -18,9 +18,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 280,
       sorter: true,
-      slots: {
-        customRender: 'name',
-      },
     },
     {
       title: L('EmailAddress'),
@@ -28,9 +25,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 260,
       sorter: true,
-      slots: {
-        customRender: 'email',
-      },
     },
     {
       title: L('DisplayName:Surname'),
@@ -52,9 +46,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 180,
       sorter: true,
-      slots: {
-        customRender: 'phoneNumber',
-      }
     },
     {
       title: L('LockoutEnd'),

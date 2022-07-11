@@ -36,9 +36,6 @@ export function getDataColumns(): BasicColumn[] {
       align: 'left',
       width: 150,
       sorter: true,
-      slots: {
-        customRender: 'level',
-      },
     },
     {
       title: L('Message'),
