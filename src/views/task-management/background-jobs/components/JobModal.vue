@@ -54,14 +54,14 @@
             <DatePicker
               style="width: 100%"
               :value="getDate('beginTime')"
-              @change="(val) => dateChange('beginTime', val)"
+              @change="(val) => dateChange('beginTime', val, 'YYYY-MM-DD 00:00:00')"
             />
           </FormItem>
           <FormItem name="endTime" :label="L('DisplayName:EndTime')">
             <DatePicker
               style="width: 100%"
               :value="getDate('endTime')"
-              @change="(val) => dateChange('endTime', val)"
+              @change="(val) => dateChange('endTime', val, 'YYYY-MM-DD 23:59:59')"
             />
           </FormItem>
           <FormItem
@@ -273,9 +273,9 @@
     });
   }
 
-  function dateChange(field: string, value: string | dayjs.Dayjs) {
+  function dateChange(field: string, value: string | dayjs.Dayjs, format?: string) {
     const model = unref(modelRef);
-    model[field] = formatToDate(value);
+    model[field] = formatToDate(value, format);
   }
 
   function handleSubmit() {

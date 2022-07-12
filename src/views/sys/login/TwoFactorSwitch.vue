@@ -134,18 +134,21 @@
   function handleSendCode() {
     return validate().then((input) => {
       switch (input.type) {
+        // 短信验证码
         case 'Phone':
           sendingCode.value = true;
           return sendPhoneSignCode(input.Phone).then(() => {
             emits('send-code', input.type);
             sendingCode.value = false;
           });
+        // 邮件验证码
         case 'Email':
           sendingCode.value = true;
           return sendEmailSignCode(input.Email).then(() => {
             emits('send-code', input.type);
             sendingCode.value = false;
           });
+        // 不发送验证码, Rfc6238
         case 'Authenticator':
           emits('send-code', input.type);
           return Promise.resolve(input.type);
