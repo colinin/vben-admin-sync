@@ -6,6 +6,7 @@
     :title="getIdentity"
     :width="800"
     :min-height="600"
+    :mask-closable="false"
     @ok="handleSubmit"
     @visible-change="handleVisibleChange"
   >

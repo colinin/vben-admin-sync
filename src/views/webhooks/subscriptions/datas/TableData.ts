@@ -31,7 +31,7 @@ export function getDataColumns(): BasicColumn[] {
     {
       title: L('DisplayName:IsActive'),
       dataIndex: 'isActive',
-      align: 'left',
+      align: 'center',
       width: 180,
       sorter: true,
     },

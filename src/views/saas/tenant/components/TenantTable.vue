@@ -16,9 +16,9 @@
         >
       </template>
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'name'">
-          <span>{{ record.name }}</span>
-          <Tag v-if="!record.isActive" style="margin-left: 5px" color="orange">{{ L('UnActived') }}</Tag>
+        <template v-if="column.key === 'isActive'">
+          <CheckOutlined v-if="record.isActive" class="enable" />
+          <CloseOutlined v-else class="disable" />
         </template>
         <template v-else-if="column.key === 'action'">
           <TableAction
@@ -61,7 +61,7 @@
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import { Tag } from 'ant-design-vue';
+  import { CheckOutlined, CloseOutlined } from '@ant-design/icons-vue';
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { useModal } from '/@/components/Modal';
@@ -75,7 +75,15 @@
 
   export default defineComponent({
     name: 'TenantTable',
-    components: { BasicTable, FeatureModal, Tag, TableAction, TenantModal, TenantConnectionModal },
+    components: {
+      BasicTable,
+      CheckOutlined,
+      CloseOutlined,
+      FeatureModal,
+      TableAction,
+      TenantModal,
+      TenantConnectionModal
+    },
     setup() {
       const { L } = useLocalization(['AbpSaas', 'AbpFeatureManagement']);
       const { hasPermission } = usePermission();

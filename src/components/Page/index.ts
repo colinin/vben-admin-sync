@@ -1,9 +1,9 @@
 import { withInstall } from '/@/utils';
 
-import footer from './src/PageFooter.vue';
-import wrapper from './src/PageWrapper.vue';
+import pageFooter from './src/PageFooter.vue';
+import pageWrapper from './src/PageWrapper.vue';
 
-export const PageFooter = withInstall(footer);
-export const PageWrapper = withInstall(wrapper);
+export const PageFooter = withInstall(pageFooter);
+export const PageWrapper = withInstall(pageWrapper);
 
 export const PageWrapperFixedHeightKey = 'PageWrapperFixedHeight';

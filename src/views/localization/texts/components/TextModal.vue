@@ -31,6 +31,13 @@
       const formElRef = ref<Nullable<FormActionType>>(null);
       const formSchemas: FormSchema[] = [
         {
+          field: 'id',
+          component: 'Input',
+          label: 'id',
+          colProps: { span: 24 },
+          show: false,
+        },
+        {
           field: 'cultureName',
           component: 'ApiSelect',
           label: L('DisplayName:TargetCultureName'),
@@ -89,6 +96,9 @@
           label: L('DisplayName:Key'),
           colProps: { span: 24 },
           required: true,
+          dynamicDisabled: ({ values }) => {
+            return values.id ? true : false;
+          },
         },
         {
           field: 'value',
@@ -97,9 +107,8 @@
           colProps: { span: 24 },
           required: true,
           componentProps: {
-            autoSize: {
-              minRows: 5,
-            },
+            rows: 5,
+            showCount: true,
           },
         },
       ];

@@ -14,7 +14,8 @@
                       class="extra"
                       default-checked
                       v-model:checked="item.switch.checked"
-                      @change="handleChange(item.key, $event)"
+                      :loading="item.loading"
+                      @change="(checked) => handleChange(item, checked)"
                     />
                   </template>
                   <template #description>
@@ -35,6 +36,7 @@
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { ListItem, useProfile } from './useProfile';
   import { subscribe, unSubscribe } from '/@/api/messages/subscribes';
+  import { MyProfile } from '/@/api/account/model/profilesModel';
   export default defineComponent({
     components: {
       Card,
@@ -45,10 +47,15 @@
       ListItemMeta: List.Item.Meta,
       Switch,
     },
-    setup() {
+    props: {
+      profile: {
+        type: Object as PropType<MyProfile>,
+      }
+    },
+    setup(props) {
       const { L } = useLocalization('AbpAccount');
       const notifyGroup = ref<{[key: string]: ListItem[]}>({});
-      const { getMsgNotifyList } = useProfile();
+      const { getMsgNotifyList } = useProfile({ profile: props.profile });
 
       function _fetchNotifies() {
         getMsgNotifyList().then((res) => {
@@ -58,9 +65,12 @@
 
       onMounted(_fetchNotifies);
 
-      function handleChange(name: string, checked: boolean) {
-        checked && subscribe(name);
-        !checked && unSubscribe(name);
+      function handleChange(item: ListItem, checked) {
+        item.loading = true;
+        const api = checked ? subscribe(item.key) : unSubscribe(item.key);
+        api.finally(() => {
+          item.loading = false;
+        });
       }
 
       return {

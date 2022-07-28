@@ -1,14 +1,21 @@
 import { computed, onMounted, ref } from 'vue';
 import { Modal } from 'ant-design-vue';
 import { useMessage } from '/@/hooks/web/useMessage';
+import { usePermission } from '/@/hooks/web/usePermission';
 import { useLocalization } from '/@/hooks/abp/useLocalization';
-import { deleteById, getAll, move } from '/@/api/identity/organization-units';
+import { deleteById, get, getAll, move } from '/@/api/identity/organization-units';
 import { listToTree } from '/@/utils/helper/treeHelper';
 import { ReturnMethods } from '/@/components/Modal';
 
-export function useOuTree({ emit, modalMethods }: { emit: EmitType, modalMethods: ReturnMethods }) {
+export function useOuTree({ emit, modalMethods, permissionModalMethods }:
+  {
+    emit: EmitType,
+    modalMethods: ReturnMethods,
+    permissionModalMethods: ReturnMethods,
+  }) {
   const { createMessage } = useMessage();
-  const { L } = useLocalization('AbpIdentity');
+  const { L } = useLocalization(['AbpIdentity']);
+  const { hasPermission } = usePermission();
   const ouTree = ref<any[]>([]);
 
   const getContentMenus = computed(() => {
@@ -31,7 +38,6 @@ export function useOuTree({ emit, modalMethods }: { emit: EmitType, modalMethods
         {
           label: L('Delete'),
           handler: () => {
-            console.log(node);
             Modal.warning({
               title: L('AreYouSure'),
               content: L('ItemWillBeDeletedMessage'),
@@ -46,6 +52,21 @@ export function useOuTree({ emit, modalMethods }: { emit: EmitType, modalMethods
           },
           icon: 'ant-design:delete-outlined',
         },
+        {
+          label: L('Permissions'),
+          handler: () => {
+            get(node.dataRef.id).then((ou) => {
+              const props = {
+                providerName: 'O',
+                providerKey: ou.id,
+                identity: ou.displayName,
+              };
+              permissionModalMethods.openModal(true, props);
+            });
+          },
+          icon: 'icon-park-outline:permissions',
+          disabled: !hasPermission('AbpIdentity.OrganizationUnits.ManagePermissions'),
+        },
       ];
     };
   });
@@ -55,6 +76,7 @@ export function useOuTree({ emit, modalMethods }: { emit: EmitType, modalMethods
       const tree = listToTree(res.items, {
         id: 'id',
         pid: 'parentId',
+        children: 'children',
       });
       ouTree.value = tree;
     });

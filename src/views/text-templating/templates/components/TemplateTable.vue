@@ -3,10 +3,14 @@
     <BasicTable @register="registerTable">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'isInlineLocalized'">
-          <Switch readonly :checked="record.isInlineLocalized" />
+          <!-- <Switch readonly :checked="record.isInlineLocalized" /> -->
+          <CheckOutlined v-if="record.isInlineLocalized" class="enable" />
+          <CloseOutlined v-else class="disable" />
         </template>
         <template v-else-if="column.key === 'isLayout'">
-          <Switch readonly :checked="record.isLayout" />
+          <!-- <Switch readonly :checked="record.isLayout" /> -->
+          <CheckOutlined v-if="record.isLayout" class="enable" />
+          <CloseOutlined v-else class="disable" />
         </template>
         <template v-else-if="column.key === 'action'">
           <TableAction
@@ -27,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { Switch } from 'ant-design-vue';
+  import { CheckOutlined, CloseOutlined } from '@ant-design/icons-vue';
   import { useModal } from '/@/components/Modal';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { getDataColumns } from '../datas/TableData';

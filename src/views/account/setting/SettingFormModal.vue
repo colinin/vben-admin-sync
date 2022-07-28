@@ -6,6 +6,8 @@
     :width="600"
     :min-height="300"
     :title="commandRef.title"
+    :mask-closable="false"
+    :can-fullscreen="false"
   >
     <BasicForm
       ref="formElRef"
@@ -46,13 +48,14 @@
   });
 
   const formSchemas = computed((): FormSchema[] => {
+    const abpStore = useAbpStoreWithOut();
     const command = unref(commandRef);
     switch (command.key) {
       case 'password':
         return [
           {
             field: 'currentPassword',
-            component: 'Input',
+            component: 'InputPassword',
             label: L('DisplayName:CurrentPassword'),
             required: true,
             colProps: { span: 24 },
@@ -118,13 +121,22 @@
           },
         ];
       case 'phoneNumber':
-        const abpStore = useAbpStoreWithOut();
         const currentPhoneNumber = abpStore.getApplication.currentUser.phoneNumber;
         return [
           {
-            field: 'newPhoneNumber',
+            field: 'phoneNumber',
             component: 'Input',
             label: L('DisplayName:PhoneNumber'),
+            colProps: { span: 24 },
+            defaultValue: currentPhoneNumber,
+            componentProps: {
+              readonly: true,
+            },
+          },
+          {
+            field: 'newPhoneNumber',
+            component: 'Input',
+            label: L('DisplayName:NewPhoneNumber'),
             colProps: { span: 24 },
             dynamicDisabled: ({ model, field }) => {
               return currentPhoneNumber !== '' && model[field] === currentPhoneNumber;

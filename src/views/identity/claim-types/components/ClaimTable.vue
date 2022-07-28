@@ -14,10 +14,12 @@
           <span>{{ valueTypeMap[record.valueType] }}</span>
         </template>
         <template v-else-if="column.key === 'required'">
-          <Switch :checked="record.required" readonly />
+          <CheckOutlined v-if="record.required" class="enable" />
+          <CloseOutlined v-else class="disable" />
         </template>
         <template v-else-if="column.key === 'isStatic'">
-          <Switch :checked="record.isStatic" readonly />
+          <CheckOutlined v-if="record.isStatic" class="enable" />
+          <CloseOutlined v-else class="disable" />
         </template>
         <template v-else-if="column.key === 'action'">
           <TableAction
@@ -49,7 +51,7 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { Switch } from 'ant-design-vue';
+  import { CheckOutlined, CloseOutlined } from '@ant-design/icons-vue';
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { useModal } from '/@/components/Modal';
@@ -62,7 +64,8 @@
     components: {
       BasicTable,
       ClaimModal,
-      Switch,
+      CheckOutlined,
+      CloseOutlined,
       TableAction,
     },
     setup() {

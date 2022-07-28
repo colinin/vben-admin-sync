@@ -25,6 +25,7 @@
       @drop="handleDrop"
     />
     <OrganizationUnitModal @register="registerModal" @change="loadOuTree" />
+    <PermissionModal @register="registerPermissionModal" />
   </Card>
 </template>
 
@@ -36,15 +37,17 @@
   import { BasicTree } from '/@/components/Tree';
   import { useModal } from '/@/components/Modal';
   import { useOuTree } from '../hooks/useOuTree';
+  import { PermissionModal } from '/@/components/Permission';
   import OrganizationUnitModal from './OrganizationUnitModal.vue';
 
   export default defineComponent({
     name: 'OrganizationUnitTree',
-    components: { BasicTree, Card, OrganizationUnitModal },
+    components: { BasicTree, Card, OrganizationUnitModal, PermissionModal },
     emits: ['change', 'select'],
     setup(_props, { emit }) {
       const { L } = useLocalization('AbpIdentity');
       const [registerModal, modalMethods] = useModal();
+      const [registerPermissionModal, permissionModalMethods] = useModal();
       const {
         ouTree,
         getContentMenus,
@@ -52,7 +55,7 @@
         handleAddNew,
         handleSelect,
         loadOuTree,
-      } = useOuTree({ emit, modalMethods });
+      } = useOuTree({ emit, modalMethods, permissionModalMethods });
       const { hasPermission } = usePermission();
 
       return {
@@ -65,6 +68,7 @@
         handleDrop,
         handleAddNew,
         handleSelect,
+        registerPermissionModal,
       };
     },
   });

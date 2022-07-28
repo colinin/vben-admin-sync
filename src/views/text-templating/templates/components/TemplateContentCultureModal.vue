@@ -41,7 +41,7 @@
   });
   const getCardTitle = computed(() => {
     const textTemplate = unref(textTemplateRef);
-    return `${L('DisplayName:Name')}: ${textTemplate?.name}`
+    return `${L('DisplayName:Name')}: ${textTemplate?.name}(${textTemplate?.displayName})`
   });
   const [registerForm, { resetFields, setFieldsValue, validateFields, clearValidate }] = useForm({
     layout: 'vertical',
@@ -88,7 +88,9 @@
           readonly: true,
           autoSize: {
             minRows: 15,
+            maxRows: 50,
           },
+          showCount: true,
         },
       },
       {
@@ -100,7 +102,9 @@
         componentProps: {
           autoSize: {
             minRows: 15,
+            maxRows: 50,
           },
+          showCount: true,
         },
       },
     ],

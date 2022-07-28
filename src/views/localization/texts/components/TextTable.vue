@@ -54,7 +54,7 @@
       const { L } = useLocalization(['LocalizationManagement', 'AbpUi']);
       const { hasPermission } = usePermission();
       const [registerModal, { openModal }] = useModal();
-      const [registerTable, { setTableData, getForm }] = useTable({
+      const [registerTable, { setTableData, setPagination, getForm }] = useTable({
         rowKey: 'id',
         title: L('Texts'),
         columns: getDataColumns(),
@@ -75,6 +75,9 @@
       });
 
       function fetchTexts() {
+        setPagination({
+          current: 1,
+        });
         const form = getForm();
         return form.validate().then((input) => {
           const request = cloneDeep(input);
@@ -94,7 +97,7 @@
       }
 
       function handleEdit(record) {
-        openModal(true, record);
+        openModal(true, {...{ id: 1 }, ...record});
       }
 
       return {

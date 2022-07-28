@@ -12,11 +12,12 @@
                   class="extra"
                   default-checked
                   v-model:checked="item.switch.checked"
+                  :loading="item.loading"
                   @change="handleChange(item, $event)"
                 />
-                <div v-else-if="item.extra" class="extra" @click="toggleCommand(item)">
+                <Button v-else-if="item.extra" class="extra" type="link" :loading="item.loading" :disbled="!item.enabled" @click="toggleCommand(item)">
                   {{ item.extra }}
-                </div>
+                </Button>
               </template>
               <template #description>
                 <div>
@@ -34,18 +35,20 @@
 </template>
 <script lang="ts">
   import type { ListItem } from './useProfile';
-  import { List, Switch, Tag } from 'ant-design-vue';
+  import { Button, List, Switch, Tag } from 'ant-design-vue';
   import { defineComponent, ref, onMounted } from 'vue';
   import { CollapseContainer } from '/@/components/Container';
   import { useModal } from '/@/components/Modal';
   import { useProfile } from './useProfile';
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { changeTwoFactorEnabled } from '/@/api/account/profiles';
+  import { changeTwoFactorEnabled, sendEmailConfirmLink } from '/@/api/account/profiles';
+  import { MyProfile } from '/@/api/account/model/profilesModel';
   import SettingFormModal from './SettingFormModal.vue';
 
   export default defineComponent({
     components: {
+      Button,
       CollapseContainer,
       List,
       ListItem: List.Item,
@@ -54,10 +57,15 @@
       Tag,
       SettingFormModal,
     },
-    setup() {
+    props: {
+      profile: {
+        type: Object as PropType<MyProfile>,
+      }
+    },
+    setup(props) {
       const { createMessage } = useMessage();
       const { L } = useLocalization('AbpAccount');
-      const { getSecureSettingList } = useProfile();
+      const { getSecureSettingList } = useProfile({ profile: props.profile });
       const secureSettingList = ref<ListItem[]>([]);
       const [registerModal, { openModal }] = useModal();
 
@@ -68,14 +76,33 @@
       });
 
       function toggleCommand(item: ListItem) {
-        openModal(true, item);
+        item.loading = true;
+        switch (item.key) {
+          case 'password':
+          case 'phoneNumber':
+            openModal(true, item);
+            item.loading = false;
+            break;
+          case 'email':
+            sendEmailConfirmLink({
+              email: item.description,
+              appName: 'STS',
+              returnUrl: window.location.href,
+            }).finally(() => {
+              item.loading = false;
+            });
+            break;
+        }
       }
 
-      function handleChange(item: ListItem, checked: boolean) {
+      function handleChange(item: ListItem, checked) {
+        item.loading = true;
         switch (item.key) {
           case 'twofactor':
             changeTwoFactorEnabled(checked).then(() => {
               createMessage.success(L('Successful'));
+            }).finally(() => {
+              item.loading = false;
             });
             break;
         }

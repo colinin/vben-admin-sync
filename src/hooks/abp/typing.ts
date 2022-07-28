@@ -10,13 +10,13 @@ export interface IField extends IRule {
   name?: string;
   /** 字段前缀
    * @description 用于本地化字段名称
-   * @example DisplayName 参与本地化字段结果 => L('ResourceName.DisplayName:Field')
+   * @example DisplayName => L('ResourceName.DisplayName:Field')
    */
   prefix?: string;
   /** 连接符
    * @description 用于本地化字段名称时的连接字符
-   * @example . 参与本地化字段结果 => L('ResourceName.DisplayName.Field')
-   * @example : 参与本地化字段结果 => L('ResourceName.DisplayName:Field')
+   * @example . => L('ResourceName.DisplayName.Field')
+   * @example : => L('ResourceName.DisplayName:Field')
    */
   connector?: string;
   /** 本地化资源 */

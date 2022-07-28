@@ -11,7 +11,8 @@
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'isActive'">
-          <Switch :checked="record.isActive" readonly />
+          <CheckOutlined v-if="record.isActive" class="enable" />
+          <CloseOutlined v-else class="disable" />
         </template>
         <template v-else-if="column.key === 'webhooks'">
           <Tag v-for="hook in record.webhooks" color="blue">{{ hook }}</Tag>
@@ -43,7 +44,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { Switch, Tag } from 'ant-design-vue';
+  import { Tag } from 'ant-design-vue';
+  import { CheckOutlined, CloseOutlined } from '@ant-design/icons-vue';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useLocalization } from '/@/hooks/abp/useLocalization';
   import { useModal } from '/@/components/Modal';

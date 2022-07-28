@@ -35,14 +35,14 @@ export function getDataColumns(): BasicColumn[] {
     {
       title: L('IdentityClaim:Required'),
       dataIndex: 'required',
-      align: 'left',
+      align: 'center',
       width: 150,
       sorter: true,
     },
     {
       title: L('IdentityClaim:IsStatic'),
       dataIndex: 'isStatic',
-      align: 'left',
+      align: 'center',
       width: 150,
       sorter: true,
     },
@@ -50,7 +50,7 @@ export function getDataColumns(): BasicColumn[] {
       title: L('IdentityClaim:Description'),
       dataIndex: 'description',
       align: 'left',
-      width: 'auto',
+      width: 300,
       sorter: true,
     },
   ];
