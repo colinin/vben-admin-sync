@@ -12,7 +12,7 @@
         title: L('Actions'),
         dataIndex: 'action',
       }"
-    >
+    > 
       <template #toolbar>
         <Button type="primary" @click="handleAddNew">{{ L('Propertites:New') }}</Button>
       </template>
